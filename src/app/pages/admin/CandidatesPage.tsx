@@ -139,9 +139,12 @@ export function CandidatesPage() {
   useEffect(() => {
     fetchCandidates();
 
-    const interval = setInterval(() => {
-      fetchCandidates();
-    }, 10000);
+    const interval = setInterval(
+      () => {
+        fetchCandidates();
+      },
+      5 * 60 * 1000,
+    );
 
     return () => clearInterval(interval);
   }, []);

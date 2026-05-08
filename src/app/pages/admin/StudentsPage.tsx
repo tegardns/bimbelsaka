@@ -148,9 +148,12 @@ export function StudentsPage() {
   useEffect(() => {
     fetchStudents();
 
-    const interval = setInterval(() => {
-      fetchStudents();
-    }, 10000);
+    const interval = setInterval(
+      () => {
+        fetchStudents();
+      },
+      5 * 60 * 1000,
+    );
 
     return () => clearInterval(interval);
   }, []);

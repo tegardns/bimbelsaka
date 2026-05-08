@@ -103,9 +103,12 @@ export function ArticleDetailPage() {
   useEffect(() => {
     fetchArticleDetail();
 
-    const interval = setInterval(() => {
-      fetchArticleDetail();
-    }, 10000);
+    const interval = setInterval(
+      () => {
+        fetchArticleDetail();
+      },
+      5 * 60 * 1000,
+    );
 
     return () => clearInterval(interval);
   }, [id]);

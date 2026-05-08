@@ -77,9 +77,12 @@ export function ArticlesPage() {
   useEffect(() => {
     fetchArticles();
 
-    const interval = setInterval(() => {
-      fetchArticles();
-    }, 10000);
+    const interval = setInterval(
+      () => {
+        fetchArticles();
+      },
+      5 * 60 * 1000,
+    ); // Refresh setiap 5 menit
 
     return () => clearInterval(interval);
   }, []);
