@@ -1,4 +1,10 @@
-import { GraduationCap, Facebook, Instagram, Youtube, Mail } from 'lucide-react';
+import {
+  GraduationCap,
+  Facebook,
+  Instagram,
+  Youtube,
+  Mail,
+} from "lucide-react";
 import logoSaka from "../../imports/bim.png";
 
 export function Footer() {
@@ -7,7 +13,7 @@ export function Footer() {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -17,10 +23,15 @@ export function Footer() {
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <img src={logoSaka} alt="Bimbel Saka Logo" className="h-14 w-auto object-contain" />
+              <img
+                src={logoSaka}
+                alt="Bimbel Saka Logo"
+                className="h-14 w-auto object-contain"
+              />
             </div>
             <p className="text-white/70 text-sm leading-relaxed mb-6">
-              Membangun fondasi masa depan cemerlang dengan metode pembelajaran personal dan tutor berpengalaman.
+              Membangun fondasi masa depan cemerlang dengan metode pembelajaran
+              personal dan tutor berpengalaman.
             </p>
             <div className="flex items-center gap-3">
               <a
@@ -32,7 +43,7 @@ export function Footer() {
                 <Facebook className="w-4 h-4" />
               </a>
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/bimbelsaka.pbg"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 bg-white/10 hover:bg-primary rounded-lg flex items-center justify-center transition-colors"
@@ -54,27 +65,42 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Program</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <button onClick={() => scrollToSection('services')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   Calistung
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('services')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   SD - SMP
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('services')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   SMA & UTBK
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('services')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   Home Visit
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('services')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("services")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   Online Learning
                 </button>
               </li>
@@ -85,22 +111,34 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Perusahaan</h4>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <button onClick={() => scrollToSection('why-choose-us')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("why-choose-us")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   Tentang Kami
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('career')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("career")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   Karir
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('articles')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("articles")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   Artikel
                 </button>
               </li>
               <li>
-                <button onClick={() => scrollToSection('contact')} className="text-white/70 hover:text-white transition-colors">
+                <button
+                  onClick={() => scrollToSection("contact")}
+                  className="text-white/70 hover:text-white transition-colors"
+                >
                   Kontak
                 </button>
               </li>
@@ -111,24 +149,34 @@ export function Footer() {
             <h4 className="font-semibold mb-4">Kontak</h4>
             <ul className="space-y-3 text-sm">
               <li className="text-white/70">
-                Jl. Veteran Wirasana<br />
-                Purbalingga, Jawa Tengah<br />
+                Jl. Veteran Wirasana
+                <br />
+                Purbalingga, Jawa Tengah
+                <br />
                 53318
               </li>
-              <li>
+              {/* <li>
                 <a href="tel:+62281234567" className="text-white/70 hover:text-white transition-colors">
                   (0281) 123-4567
                 </a>
-              </li>
+              </li> */}
               <li>
-                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="text-white/70 hover:text-white transition-colors">
-                  +62 812-3456-7890 (WA)
+                <a
+                  href="https://wa.me/62895357409769"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white/70 hover:text-white transition-colors"
+                >
+                  0895-3574-09769 (WA)
                 </a>
               </li>
               <li>
-                <a href="mailto:info@bimbelsaka.com" className="text-white/70 hover:text-white transition-colors flex items-center gap-2">
+                <a
+                  href="mailto:bimbelsakapbg@gmail.com"
+                  className="text-white/70 hover:text-white transition-colors flex items-center gap-2"
+                >
                   <Mail className="w-4 h-4" />
-                  info@bimbelsaka.com
+                  bimbelsakapbg@gmail.com
                 </a>
               </li>
             </ul>
@@ -138,15 +186,16 @@ export function Footer() {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-white/60">
-              © {currentYear} Bimbel Saka. All rights reserved.
+              © {currentYear} Bimbel Saka. Made with 💙 in{" "}
+              <strong>Purbalingga</strong>.
             </p>
             <div className="flex items-center gap-6 text-sm text-white/60">
-              <button className="hover:text-white transition-colors">
+              {/* <button className="hover:text-white transition-colors">
                 Kebijakan Privasi
               </button>
               <button className="hover:text-white transition-colors">
                 Syarat & Ketentuan
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
