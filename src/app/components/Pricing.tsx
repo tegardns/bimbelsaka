@@ -13,8 +13,8 @@ export function Pricing() {
     {
       program: "SMA",
       level: "Kelas 10-12",
-      price: "50k",
-      duration: "90 menit",
+      price: "Coming Soon",
+      duration: "Coming Soon",
     },
   ];
 
@@ -34,7 +34,7 @@ export function Pricing() {
             </span>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Harga Les Mulai Dari
+            Gratis Biaya Registrasi
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Investasi terbaik untuk masa depan dengan harga terjangkau

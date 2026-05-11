@@ -17,43 +17,48 @@ if (!API_BASE_URL) {
   throw new Error("VITE_API_BASE_URL belum diset di .env.local");
 }
 
-type FormData = {
+type TutorFormData = {
   name: string;
   email: string;
   phone: string;
   education: string;
   subject: string;
   experience: string;
-  motivation: string;
   teachingLevel: string;
   referralSource: string;
   referralFriendName: string;
   referralOther: string;
+  address: string;
+  cvFile: File | null;
+  transcriptFile: File | null;
 };
 
 export function CareerPage() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<TutorFormData>({
     name: "",
     email: "",
     phone: "",
     education: "",
     subject: "",
     experience: "",
-    motivation: "",
     teachingLevel: "",
     referralSource: "",
     referralFriendName: "",
     referralOther: "",
+    address: "",
+    cvFile: null,
+    transcriptFile: null,
   });
 
+  const [formResetKey, setFormResetKey] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-  const handleChange = <K extends keyof FormData>(
+  const handleChange = <K extends keyof TutorFormData>(
     key: K,
-    value: FormData[K],
+    value: TutorFormData[K],
   ) => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
@@ -80,6 +85,34 @@ export function CareerPage() {
         );
       }
 
+      if (!formData.address.trim()) {
+        throw new Error("Alamat wajib diisi.");
+      }
+
+      if (!formData.cvFile) {
+        throw new Error("CV wajib diupload.");
+      }
+
+      if (!formData.transcriptFile) {
+        throw new Error("Transkrip nilai wajib diupload.");
+      }
+
+      if (formData.cvFile.type !== "application/pdf") {
+        throw new Error("CV harus berformat PDF.");
+      }
+
+      if (formData.transcriptFile.type !== "application/pdf") {
+        throw new Error("Transkrip harus berformat PDF.");
+      }
+
+      if (formData.cvFile.size > 5 * 1024 * 1024) {
+        throw new Error("Ukuran CV maksimal 5MB.");
+      }
+
+      if (formData.transcriptFile.size > 5 * 1024 * 1024) {
+        throw new Error("Ukuran transkrip maksimal 5MB.");
+      }
+
       const phoneRegex = /^(08|628)[0-9]{8,13}$/;
       const onlyNumbers = formData.phone.replace(/\D/g, "");
 
@@ -92,26 +125,25 @@ export function CareerPage() {
         throw new Error("Email tidak valid.");
       }
 
-      const payload = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        phone: onlyNumbers,
-        education: formData.education.trim(),
-        subject: formData.subject.trim(),
-        teachingLevel: formData.teachingLevel,
-        experience: formData.experience.trim(),
-        motivation: formData.motivation.trim(),
-        referralSource: formData.referralSource,
-        referralFriendName: formData.referralFriendName.trim(),
-        referralOther: formData.referralOther.trim(),
-      };
+      const payload = new FormData();
+
+      payload.append("name", formData.name.trim());
+      payload.append("email", formData.email.trim());
+      payload.append("phone", onlyNumbers);
+      payload.append("education", formData.education.trim());
+      payload.append("subject", formData.subject.trim());
+      payload.append("teachingLevel", formData.teachingLevel);
+      payload.append("experience", formData.experience.trim());
+      payload.append("address", formData.address.trim());
+      payload.append("referralSource", formData.referralSource);
+      payload.append("referralFriendName", formData.referralFriendName.trim());
+      payload.append("referralOther", formData.referralOther.trim());
+      payload.append("cvFile", formData.cvFile);
+      payload.append("transcriptFile", formData.transcriptFile);
 
       const response = await fetch(`${API_BASE_URL}/api/tutors`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: payload,
       });
 
       const data = await response.json();
@@ -129,13 +161,16 @@ export function CareerPage() {
         education: "",
         subject: "",
         experience: "",
-        motivation: "",
         teachingLevel: "",
         referralSource: "",
         referralFriendName: "",
         referralOther: "",
+        address: "",
+        cvFile: null,
+        transcriptFile: null,
       });
 
+      setFormResetKey((prev) => prev + 1);
       setShowSuccessModal(true);
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan.";
@@ -177,9 +212,10 @@ export function CareerPage() {
   ];
 
   const requirements = [
-    "Minimal pendidikan SMA/SMK atau sederajat",
+    "Pendidikan D3/S1/Mahasiswa minimal semester 3",
     "Menguasai mata pelajaran yang akan diajarkan",
     "Mampu berkomunikasi dengan baik",
+    "Memiliki kendaraan pribadi",
     "Sabar dan telaten dalam mengajar",
     "Komitmen terhadap jadwal mengajar",
     "Domisili di Purbalingga atau sekitarnya",
@@ -190,25 +226,25 @@ export function CareerPage() {
       title: "Tutor Calistung",
       subjects: "Membaca, Menulis, Berhitung",
       level: "Usia 4-7 tahun",
-      slots: "3 posisi",
+      slots: "Hiring",
     },
     {
       title: "Tutor SD",
       subjects: "Semua Mata Pelajaran",
       level: "Kelas 1-6",
-      slots: "5 posisi",
+      slots: "Hiring",
     },
     {
       title: "Tutor SMP",
       subjects: "Matematika, IPA, Bahasa Inggris",
       level: "Kelas 7-9",
-      slots: "4 posisi",
+      slots: "Hiring",
     },
     {
       title: "Tutor SMA",
       subjects: "Matematika, Fisika, Kimia, Bahasa Inggris",
       level: "Kelas 10-12 & UTBK",
-      slots: "6 posisi",
+      slots: "Coming Soon",
     },
   ];
 
@@ -241,7 +277,7 @@ export function CareerPage() {
     {
       question: "Apakah tutor mendapatkan materi/modul mengajar?",
       answer:
-        "Ya, kami menyediakan modul pembelajaran dan worksheet yang bisa digunakan. Tutor juga diperbolehkan membuat materi sendiri yang disesuaikan dengan kebutuhan siswa.",
+        "Ya, Untuk Calistung kami menyediakan modul pembelajaran dan worksheet yang bisa digunakan. Tutor juga diperbolehkan membuat materi sendiri yang disesuaikan dengan kebutuhan siswa.",
     },
   ];
 
@@ -454,7 +490,11 @@ export function CareerPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form
+              key={formResetKey}
+              onSubmit={handleSubmit}
+              className="space-y-6"
+            >
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
@@ -562,10 +602,23 @@ export function CareerPage() {
 
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
-                  Pengalaman Mengajar <span className="text-red-500">*</span>
+                  Alamat <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   required
+                  value={formData.address}
+                  onChange={(e) => handleChange("address", e.target.value)}
+                  rows={3}
+                  placeholder="Masukkan alamat calon tutor saat ini"
+                  className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Pengalaman Mengajar <span className="text-red-500">*</span>
+                </label>
+                <textarea
                   value={formData.experience}
                   onChange={(e) => handleChange("experience", e.target.value)}
                   rows={3}
@@ -576,16 +629,74 @@ export function CareerPage() {
 
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
-                  Motivasi Menjadi Tutor <span className="text-red-500">*</span>
+                  CV Terbaru <span className="text-red-500">*</span>
                 </label>
-                <textarea
+
+                <input
+                  type="file"
+                  accept="application/pdf"
                   required
-                  value={formData.motivation}
-                  onChange={(e) => handleChange("motivation", e.target.value)}
-                  rows={4}
-                  placeholder="Mengapa kamu ingin menjadi tutor di Bimbel Saka?"
-                  className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+
+                    if (!file) return;
+
+                    if (file.type !== "application/pdf") {
+                      toast.error("CV harus berformat PDF");
+                      e.currentTarget.value = "";
+                      return;
+                    }
+
+                    if (file.size > 5 * 1024 * 1024) {
+                      toast.error("Ukuran CV maksimal 5MB");
+                      e.currentTarget.value = "";
+                      return;
+                    }
+
+                    handleChange("cvFile", file);
+                  }}
+                  className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-primary/90"
                 />
+
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Format PDF maksimal 5MB
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Transkrip Nilai <span className="text-red-500">*</span>
+                </label>
+
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  required
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+
+                    if (!file) return;
+
+                    if (file.type !== "application/pdf") {
+                      toast.error("Transkrip harus berformat PDF");
+                      e.currentTarget.value = "";
+                      return;
+                    }
+
+                    if (file.size > 5 * 1024 * 1024) {
+                      toast.error("Ukuran transkrip maksimal 5MB");
+                      e.currentTarget.value = "";
+                      return;
+                    }
+
+                    handleChange("transcriptFile", file);
+                  }}
+                  className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-primary/90"
+                />
+
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Format PDF maksimal 5MB
+                </p>
               </div>
 
               <div>

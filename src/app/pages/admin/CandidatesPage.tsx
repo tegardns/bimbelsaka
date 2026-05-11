@@ -8,7 +8,6 @@ import {
   X,
 } from "lucide-react";
 import * as XLSX from "xlsx";
-// import { useState, useEffect, useMemo } from "react";
 
 interface Candidate {
   id: string;
@@ -19,10 +18,12 @@ interface Candidate {
   subject: string;
   teachingLevel: string;
   experience: string;
-  motivation: string;
+  address: string;
   referralSource: string;
   referralFriendName?: string;
   referralOther?: string;
+  cvFileUrl?: string;
+  transcriptFileUrl?: string;
   date: string;
 }
 
@@ -33,85 +34,31 @@ export function CandidatesPage() {
   const [viewingCandidate, setViewingCandidate] = useState<Candidate | null>(
     null,
   );
-  const itemsPerPage = 10;
 
-  // Dummy data - dalam production, ambil dari API/localStorage
-  // const allCandidates: Candidate[] = [
-  //   {
-  //     id: 1,
-  //     name: "Ahmad Fauzi",
-  //     email: "ahmad@email.com",
-  //     phone: "081234567890",
-  //     education: "S1",
-  //     subject: "Matematika, Fisika",
-  //     teachingLevel: "SMA",
-  //     experience: "2 tahun mengajar di SMA",
-  //     motivation:
-  //       "Ingin berbagi ilmu dan membantu siswa memahami konsep dengan lebih baik",
-  //     referralSource: "Instagram",
-  //     date: "2026-05-01",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Siti Nurhaliza",
-  //     email: "siti@email.com",
-  //     phone: "082345678901",
-  //     education: "S1",
-  //     subject: "Bahasa Inggris",
-  //     teachingLevel: "SMP",
-  //     experience: "1 tahun mengajar privat",
-  //     motivation:
-  //       "Passion dalam mengajar dan ingin mengembangkan kemampuan siswa",
-  //     referralSource: "Teman",
-  //     referralFriendName: "Rina",
-  //     date: "2026-05-03",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Budi Santoso",
-  //     email: "budi@email.com",
-  //     phone: "083456789012",
-  //     education: "S2",
-  //     subject: "Kimia, Biologi",
-  //     teachingLevel: "SMA",
-  //     experience: "3 tahun mengajar di bimbel",
-  //     motivation: "Membantu siswa berprestasi dan mencapai cita-cita mereka",
-  //     referralSource: "Facebook",
-  //     date: "2026-04-28",
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Dewi Lestari",
-  //     email: "dewi@email.com",
-  //     phone: "084567890123",
-  //     education: "S1",
-  //     subject: "Calistung",
-  //     teachingLevel: "Calistung",
-  //     experience: "Fresh graduate pendidikan",
-  //     motivation:
-  //       "Suka mengajar anak kecil dan membangun fondasi belajar yang kuat",
-  //     referralSource: "Lainnya",
-  //     referralOther: "Spanduk di jalan",
-  //     date: "2026-05-05",
-  //   },
-  // ];
+  const [allCandidates, setAllCandidates] = useState<Candidate[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const itemsPerPage = 10;
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+  if (!API_BASE_URL) {
+    throw new Error("VITE_API_BASE_URL belum diset di .env.local");
+  }
 
   const fetchCandidates = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/api/tutors`,
-      );
-
+      const response = await fetch(`${API_BASE_URL}/api/tutors`);
       const result = await response.json();
 
       if (!response.ok) {
         throw new Error(result?.message || "Gagal mengambil data tutor");
       }
 
-      const mapped: Candidate[] = result.data.map((item: any) => ({
+      const mapped: Candidate[] = (result.data || []).map((item: any) => ({
         id: item.id,
         name: item.name,
         email: item.email,
@@ -119,11 +66,13 @@ export function CandidatesPage() {
         education: item.education,
         subject: item.subject,
         teachingLevel: item.teaching_level,
-        experience: item.experience,
-        motivation: item.motivation,
+        experience: item.experience || "",
+        address: item.address || "",
         referralSource: item.referral_source || "",
         referralFriendName: item.referral_friend_name || undefined,
         referralOther: item.referral_other || undefined,
+        cvFileUrl: item.cv_file_url || undefined,
+        transcriptFileUrl: item.transcript_file_url || undefined,
         date: item.created_at,
       }));
 
@@ -149,11 +98,6 @@ export function CandidatesPage() {
     return () => clearInterval(interval);
   }, []);
 
-  const [allCandidates, setAllCandidates] = useState<Candidate[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // Get unique months from data
   const availableMonths = Array.from(
     new Set(allCandidates.map((c) => c.date.substring(0, 7))),
   )
@@ -181,12 +125,10 @@ export function CandidatesPage() {
       };
     });
 
-  // Reset to page 1 when filter changes
   useEffect(() => {
     setCurrentPage(1);
   }, [searchTerm, selectedMonth]);
 
-  // Filter data
   const filteredCandidates = allCandidates.filter((candidate) => {
     const matchSearch =
       candidate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -199,7 +141,6 @@ export function CandidatesPage() {
     return matchSearch && matchMonth;
   });
 
-  // Pagination
   const totalPages = Math.ceil(filteredCandidates.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedCandidates = filteredCandidates.slice(
@@ -207,27 +148,28 @@ export function CandidatesPage() {
     startIndex + itemsPerPage,
   );
 
-  // Export to Excel
   const handleExportExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       filteredCandidates.map((c) => {
         const referralInfo =
           c.referralSource === "Teman"
-            ? `${c.referralSource} (${c.referralFriendName})`
+            ? `${c.referralSource} (${c.referralFriendName || "-"})`
             : c.referralSource === "Lainnya"
-              ? `${c.referralSource} (${c.referralOther})`
-              : c.referralSource;
+              ? `${c.referralSource} (${c.referralOther || "-"})`
+              : c.referralSource || "-";
 
         return {
           Nama: c.name,
           Email: c.email,
           Telepon: c.phone,
           Pendidikan: c.education,
+          Alamat: c.address,
           "Mata Pelajaran": c.subject,
           "Level Mengajar": c.teachingLevel,
-          Pengalaman: c.experience,
-          Motivasi: c.motivation,
+          Pengalaman: c.experience || "-",
           "Info Dari": referralInfo,
+          CV: c.cvFileUrl || "-",
+          "Transkrip Nilai": c.transcriptFileUrl || "-",
           "Tanggal Daftar": new Date(c.date).toLocaleDateString("id-ID"),
         };
       }),
@@ -265,7 +207,6 @@ export function CandidatesPage() {
           </p>
         </div>
 
-        {/* Filters */}
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <div className="grid md:grid-cols-3 gap-4">
             <div className="md:col-span-2">
@@ -311,7 +252,6 @@ export function CandidatesPage() {
           </div>
         </div>
 
-        {/* Table */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -382,7 +322,6 @@ export function CandidatesPage() {
             </table>
           </div>
 
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
               <button
@@ -424,7 +363,6 @@ export function CandidatesPage() {
           )}
         </div>
 
-        {/* Detail Modal */}
         {viewingCandidate && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -445,6 +383,7 @@ export function CandidatesPage() {
                   </label>
                   <p className="text-gray-900 mt-1">{viewingCandidate.name}</p>
                 </div>
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-semibold text-gray-600">
@@ -463,6 +402,7 @@ export function CandidatesPage() {
                     </p>
                   </div>
                 </div>
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-semibold text-gray-600">
@@ -483,6 +423,7 @@ export function CandidatesPage() {
                     </p>
                   </div>
                 </div>
+
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-semibold text-gray-600">
@@ -501,28 +442,31 @@ export function CandidatesPage() {
                     </p>
                   </div>
                 </div>
+
+                <div>
+                  <label className="text-sm font-semibold text-gray-600">
+                    Alamat
+                  </label>
+                  <p className="text-gray-900 mt-1 whitespace-pre-wrap">
+                    {viewingCandidate.address || "-"}
+                  </p>
+                </div>
+
                 <div>
                   <label className="text-sm font-semibold text-gray-600">
                     Pengalaman Mengajar
                   </label>
                   <p className="text-gray-900 mt-1 whitespace-pre-wrap">
-                    {viewingCandidate.experience}
+                    {viewingCandidate.experience || "-"}
                   </p>
                 </div>
-                <div>
-                  <label className="text-sm font-semibold text-gray-600">
-                    Motivasi Menjadi Tutor
-                  </label>
-                  <p className="text-gray-900 mt-1 whitespace-pre-wrap">
-                    {viewingCandidate.motivation}
-                  </p>
-                </div>
+
                 <div>
                   <label className="text-sm font-semibold text-gray-600">
                     Sumber Informasi
                   </label>
                   <p className="text-gray-900 mt-1">
-                    {viewingCandidate.referralSource}
+                    {viewingCandidate.referralSource || "-"}
                     {viewingCandidate.referralSource === "Teman" &&
                       viewingCandidate.referralFriendName &&
                       ` (Nama Teman: ${viewingCandidate.referralFriendName})`}
@@ -530,6 +474,48 @@ export function CandidatesPage() {
                       viewingCandidate.referralOther &&
                       ` (${viewingCandidate.referralOther})`}
                   </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-semibold text-gray-600">
+                      CV Terbaru
+                    </label>
+                    <div className="mt-2">
+                      {viewingCandidate.cvFileUrl ? (
+                        <a
+                          href={viewingCandidate.cvFileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center px-4 py-2 bg-primary !text-white rounded-lg hover:bg-primary/90 transition-colors"
+                        >
+                          Lihat CV
+                        </a>
+                      ) : (
+                        <p className="text-gray-900">-</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-sm font-semibold text-gray-600">
+                      Transkrip Nilai
+                    </label>
+                    <div className="mt-2">
+                      {viewingCandidate.transcriptFileUrl ? (
+                        <a
+                          href={viewingCandidate.transcriptFileUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center px-4 py-2 bg-primary !text-white rounded-lg hover:bg-primary/90 transition-colors"
+                        >
+                          Lihat Transkrip
+                        </a>
+                      ) : (
+                        <p className="text-gray-900">-</p>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
 

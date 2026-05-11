@@ -53,11 +53,11 @@ export function HowToRegister() {
               <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-border hover:border-primary/30 h-full">
                 <div className="flex flex-col items-center text-center">
                   <div
-                    className={`w-16 h-16 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg`}
+                    className={`w-16 h-16 bg-accent ${step.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg`}
                   >
                     <step.icon className="w-8 h-8 text-white" />
                   </div>
-                  <div className="w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold mb-4 text-sm">
+                  <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold mb-4 text-sm">
                     {index + 1}
                   </div>
                   <h3 className="font-bold text-foreground mb-2">

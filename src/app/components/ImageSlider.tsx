@@ -1,21 +1,24 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Slide1 from "../../../assets/9.webp";
+import Slide2 from "../../../assets/10.webp";
+import Slide3 from "../../../assets/11.webp";
 
 export function ImageSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
     {
-      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=600&fit=crop',
-      alt: "Pembelajaran Efektif",
+      image: Slide1,
+      alt: "Gratis Registrasi",
     },
     {
-      image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=600&fit=crop',
-      alt: "Fokus & Hasil",
+      image: Slide2,
+      alt: "Bonus",
     },
     {
-      image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800&h=600&fit=crop',
-      alt: "Tutor Terbaik",
+      image: Slide3,
+      alt: "Bebas Request",
     },
   ];
 
@@ -31,9 +34,7 @@ export function ImageSlider() {
   };
 
   const prevSlide = () => {
-    setCurrentSlide(
-      (prev) => (prev - 1 + slides.length) % slides.length,
-    );
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
   return (

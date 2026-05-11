@@ -1,22 +1,30 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Slide1 from "../../../assets/1.webp";
+import Slide2 from "../../../assets/2.webp";
+import Slide3 from "../../../assets/3.webp";
+import Slide4 from "../../../assets/4.webp";
 
 export function PromoBanner() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const banners = [
     {
-      image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=800&h=300&fit=crop',
-      alt: 'Promo Diskon Spesial'
+      image: Slide1,
+      alt: "Les Calistung",
     },
     {
-      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=300&fit=crop',
-      alt: 'Program Belajar Terbaik'
+      image: Slide2,
+      alt: "Privat SD",
     },
     {
-      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=300&fit=crop',
-      alt: 'Les Privat Berkualitas'
-    }
+      image: Slide3,
+      alt: "Privat SMP",
+    },
+    {
+      image: Slide4,
+      alt: "Privat SMA",
+    },
   ];
 
   useEffect(() => {
@@ -36,14 +44,14 @@ export function PromoBanner() {
 
   return (
     <div className="relative pt-6 w-full mb-4 md:hidden">
-      <div className="relative aspect-[3/1.5]  rounded-xl overflow-hidden bg-white/10 backdrop-blur-sm">
+      <div className="relative aspect-[3/2]  rounded-xl overflow-hidden bg-white/10 backdrop-blur-sm">
         {banners.map((banner, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-all duration-700 ${
               index === currentSlide
-                ? 'opacity-100 scale-100'
-                : 'opacity-0 scale-95'
+                ? "opacity-100 scale-100"
+                : "opacity-0 scale-95"
             }`}
           >
             <img
@@ -78,7 +86,7 @@ export function PromoBanner() {
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={`h-1.5 rounded-full transition-all ${
-                index === currentSlide ? 'w-6 bg-white' : 'w-1.5 bg-white/40'
+                index === currentSlide ? "w-6 bg-white" : "w-1.5 bg-white/40"
               }`}
             />
           ))}

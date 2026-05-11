@@ -1,22 +1,30 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Slide1 from "../../../assets/5.webp";
+import Slide2 from "../../../assets/6.webp";
+import Slide3 from "../../../assets/7.webp";
+import Slide4 from "../../../assets/8.webp";
 
 export function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
     {
-      image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=600&fit=crop',
-      alt: 'Pembelajaran Personal'
+      image: Slide1,
+      alt: "Les Calistung",
     },
     {
-      image: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&h=600&fit=crop',
-      alt: 'Fokus pada Hasil'
+      image: Slide2,
+      alt: "Privat SD",
     },
     {
-      image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=600&fit=crop',
-      alt: 'Tutor Berpengalaman'
-    }
+      image: Slide3,
+      alt: "Privat SMP",
+    },
+    {
+      image: Slide4,
+      alt: "Privat SMA",
+    },
   ];
 
   useEffect(() => {
@@ -46,10 +54,10 @@ export function HeroCarousel() {
               key={index}
               className={`absolute inset-0 transition-all duration-700 transform ${
                 index === currentSlide
-                  ? 'translate-x-0 opacity-100'
+                  ? "translate-x-0 opacity-100"
                   : index < currentSlide
-                    ? '-translate-x-full opacity-0'
-                    : 'translate-x-full opacity-0'
+                    ? "-translate-x-full opacity-0"
+                    : "translate-x-full opacity-0"
               }`}
             >
               <img
@@ -81,7 +89,9 @@ export function HeroCarousel() {
               key={index}
               onClick={() => setCurrentSlide(index)}
               className={`h-2 rounded-full transition-all ${
-                index === currentSlide ? 'w-8 bg-white shadow-lg' : 'w-2 bg-white/50'
+                index === currentSlide
+                  ? "w-8 bg-white shadow-lg"
+                  : "w-2 bg-white/50"
               }`}
             />
           ))}

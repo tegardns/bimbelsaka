@@ -55,7 +55,7 @@ export function Hero() {
             </div>
 
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-5 md:mb-6 leading-tight">
-              Hadirkan Guru Terbaik Langsung ke Rumah Kamu.
+              Hadirkan Guru Terbaik Langsung ke Rumah Kamu
             </h1>
 
             <p className="text-base md:text-xl mb-6 md:mb-8 text-white/90 leading-relaxed">

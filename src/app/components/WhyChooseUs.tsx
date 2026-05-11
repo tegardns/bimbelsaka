@@ -113,7 +113,7 @@ export function WhyChooseUs() {
                   Daftar Sekarang
                 </Link>
                 <a
-                  href="#"
+                  href="https://api.whatsapp.com/send/?phone=62895357409769&text&type=phone_number&app_absent=0"
                   className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white rounded-xl font-medium border-2 border-white/30 hover:bg-white/20 transition-all"
                 >
                   Konsultasi Gratis
