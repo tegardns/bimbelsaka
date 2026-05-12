@@ -315,43 +315,6 @@ export function CareerPage() {
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Keuntungan Menjadi Tutor
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Dapatkan berbagai benefit menarik dengan bergabung bersama kami
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {benefits.map((benefit, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-secondary/20 to-white rounded-xl p-6 border border-border hover:shadow-lg transition-all"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <benefit.icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-foreground mb-2">
-                      {benefit.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {benefit.description}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Requirements & Positions */}
       <section className="py-20 bg-gradient-to-b from-white to-secondary/30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -419,54 +382,6 @@ export function CareerPage() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ for Tutors */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
-              Pertanyaan Seputar Menjadi Tutor
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Jawaban untuk pertanyaan yang sering ditanyakan calon tutor
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {tutorFaqs.map((faq, index) => (
-              <div
-                key={index}
-                className="bg-white border border-border rounded-xl overflow-hidden hover:border-primary/30 transition-all"
-              >
-                <button
-                  onClick={() =>
-                    setOpenFaqIndex(openFaqIndex === index ? null : index)
-                  }
-                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-secondary/20 transition-colors"
-                >
-                  <span className="font-semibold text-foreground pr-4">
-                    {faq.question}
-                  </span>
-                  <div className="flex-shrink-0">
-                    {openFaqIndex === index ? (
-                      <Minus className="w-5 h-5 text-primary" />
-                    ) : (
-                      <Plus className="w-5 h-5 text-muted-foreground" />
-                    )}
-                  </div>
-                </button>
-                {openFaqIndex === index && (
-                  <div className="px-6 pb-5 pt-0">
-                    <p className="text-muted-foreground leading-relaxed">
-                      {faq.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
           </div>
         </div>
       </section>
@@ -767,6 +682,91 @@ export function CareerPage() {
                 {loading ? "Mengirim..." : "Kirim Lamaran"}
               </button>
             </form>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Keuntungan Menjadi Tutor
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Dapatkan berbagai benefit menarik dengan bergabung bersama kami
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {benefits.map((benefit, index) => (
+              <div
+                key={index}
+                className="bg-gradient-to-br from-secondary/20 to-white rounded-xl p-6 border border-border hover:shadow-lg transition-all"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 md:w-14 md:h-14 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <benefit.icon className="w-6 h-6 md:w-7 md:h-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-foreground mb-2">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {benefit.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ for Tutors */}
+      <section className="py-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-foreground mb-4">
+              Pertanyaan Seputar Menjadi Tutor
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Jawaban untuk pertanyaan yang sering ditanyakan calon tutor
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {tutorFaqs.map((faq, index) => (
+              <div
+                key={index}
+                className="bg-white border border-border rounded-xl overflow-hidden hover:border-primary/30 transition-all"
+              >
+                <button
+                  onClick={() =>
+                    setOpenFaqIndex(openFaqIndex === index ? null : index)
+                  }
+                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-secondary/20 transition-colors"
+                >
+                  <span className="font-semibold text-foreground pr-4">
+                    {faq.question}
+                  </span>
+                  <div className="flex-shrink-0">
+                    {openFaqIndex === index ? (
+                      <Minus className="w-5 h-5 text-primary" />
+                    ) : (
+                      <Plus className="w-5 h-5 text-muted-foreground" />
+                    )}
+                  </div>
+                </button>
+                {openFaqIndex === index && (
+                  <div className="px-6 pb-5 pt-0">
+                    <p className="text-muted-foreground leading-relaxed">
+                      {faq.answer}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
