@@ -237,7 +237,7 @@ export function RegistrationPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Nomor Telepon <span className="text-red-500">*</span>
+                    Nomor WA Aktif <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"

@@ -5,10 +5,10 @@ export function Pricing() {
     {
       program: "Calistung",
       level: "Usia 4-7 Tahun",
-      price: "40k",
+      price: "35k",
       duration: "75 menit",
     },
-    { program: "SD", level: "Kelas 1-6", price: "40k", duration: "90 menit" },
+    { program: "SD", level: "Kelas 1-6", price: "35k", duration: "90 menit" },
     { program: "SMP", level: "Kelas 7-9", price: "40k", duration: "90 menit" },
     {
       program: "SMA",

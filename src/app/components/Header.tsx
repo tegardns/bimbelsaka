@@ -138,8 +138,8 @@ export function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`text-left py-2 transition-colors ${
                     isActive("/")
-                      ? "text-white"
-                      : "text-white/90 hover:text-white"
+                      ? "!text-white"
+                      : "!text-white/90 hover:!text-white"
                   }`}
                 >
                   Beranda
@@ -149,8 +149,8 @@ export function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`text-left py-2 transition-colors ${
                     isActive("/karir")
-                      ? "text-white"
-                      : "text-white/90 hover:text-white"
+                      ? "!text-white"
+                      : "!text-white/90 hover:!text-white"
                   }`}
                 >
                   Karir
@@ -160,8 +160,8 @@ export function Header() {
                   onClick={() => setIsMenuOpen(false)}
                   className={`text-left py-2 transition-colors ${
                     isActive("/artikel")
-                      ? "text-white"
-                      : "text-white/90 hover:text-white"
+                      ? "!text-white"
+                      : "!text-white/90 hover:!text-white"
                   }`}
                 >
                   Artikel
@@ -169,7 +169,7 @@ export function Header() {
                 <Link
                   to="/daftar"
                   onClick={() => setIsMenuOpen(false)}
-                  className="mt-2 py-3 px-5 bg-accent text-white rounded-xl font-medium hover:bg-accent/90 transition-all text-center"
+                  className="mt-2 py-3 px-5 bg-accent !text-white rounded-xl font-medium hover:bg-accent/90 transition-all text-center"
                 >
                   Daftar Les
                 </Link>

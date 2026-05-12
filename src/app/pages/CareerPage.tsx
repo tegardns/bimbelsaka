@@ -190,29 +190,29 @@ export function CareerPage() {
       icon: TrendingUp,
       title: "Penghasilan Kompetitif",
       description:
-        "Dapatkan penghasilan yang sesuai dengan dedikasi dan kompetensi kamu",
+        "Dapatkan penghasilan yang sesuai dengan dedikasi dan kompetensi kamu.",
     },
     {
       icon: Heart,
       title: "Jadwal Fleksibel",
-      description: "Atur jadwal mengajar sesuai ketersediaan waktu kamu",
+      description: "Atur jadwal mengajar sesuai ketersediaan waktu kamu.",
     },
     {
       icon: Award,
-      title: "Pelatihan Berkala",
+      title: "Reward Bulanan",
       description:
-        "Ikuti pelatihan dan pengembangan untuk meningkatkan kualitas mengajar",
+        "Reward bulanan sebagai apresiasi bagi Tutor yang aktif dalam kegiatan mengajar.",
     },
     {
       icon: Users,
       title: "Komunitas Tutor",
       description:
-        "Bergabung dengan komunitas tutor profesional dan saling berbagi pengalaman",
+        "Bergabung dengan komunitas tutor profesional dan saling berbagi pengalaman.",
     },
   ];
 
   const requirements = [
-    "Pendidikan D3/S1/Mahasiswa minimal semester 3",
+    "Pendidikan (D3/S1/Mahasiswa minimal semester 3) diutamakan",
     "Menguasai mata pelajaran yang akan diajarkan",
     "Mampu berkomunikasi dengan baik",
     "Memiliki kendaraan pribadi",
@@ -461,7 +461,7 @@ export function CareerPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">
-                    Nomor Telepon <span className="text-red-500">*</span>
+                    Nomor WA Aktif <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="tel"

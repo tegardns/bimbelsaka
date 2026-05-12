@@ -359,7 +359,7 @@ const SakaLocationPopup = () => {
                           className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-14 pr-4 text-sm outline-none focus:ring-4 focus:ring-emerald-50 focus:border-[#00CC99] transition-all"
                         />
                         <p className="text-sm text-slate-500 mt-2">
-                          Masukkan nomor WA aktif untuk dihubungi admin
+                          Masukkan nomor WA aktif untuk terhubung dengan admin
                         </p>
                       </div>
                       <button
