@@ -13,8 +13,8 @@ export function Pricing() {
     {
       program: "SMA",
       level: "Kelas 10-12",
-      price: "Coming Soon",
-      duration: "Coming Soon",
+      price: "Segera",
+      duration: "Segera",
     },
   ];
 

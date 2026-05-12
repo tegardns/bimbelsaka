@@ -47,9 +47,9 @@ export function FAQ() {
           <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
             Pertanyaan yang Sering Diajukan
           </h2>
-          <p className="text-sm md:text-base text-muted-foreground">
+          {/* <p className="text-sm md:text-base text-muted-foreground">
             Temukan jawaban untuk pertanyaan umum seputar Bimbel Saka
-          </p>
+          </p> */}
         </div>
 
         <div className="space-y-4">

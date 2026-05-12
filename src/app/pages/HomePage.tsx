@@ -6,6 +6,7 @@ import { Pricing } from "../components/Pricing";
 import { HowToRegister } from "../components/HowToRegister";
 import { FAQ } from "../components/FAQ";
 import { Contact } from "../components/Contact";
+import SakaLocationPopup from "../components/PopupLokasi";
 
 // Import logo WhatsApp
 import WhatsappLogo from "../../../assets/whatsapp.svg";
@@ -19,6 +20,7 @@ export function HomePage() {
 
   return (
     <>
+      <SakaLocationPopup />
       <Hero />
       <Services />
       <Methods />
