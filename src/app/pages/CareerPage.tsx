@@ -284,8 +284,9 @@ export function CareerPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-primary/90 pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+      <section className="bg-gradient-to-br from-primary to-primary/90 pt-28 pb-16 md:pt-40 md:pb-28 relative overflow-hidden">
+        {/* Pattern Overlays */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div
             className="absolute inset-0"
             style={{
@@ -296,7 +297,7 @@ export function CareerPage() {
           ></div>
         </div>
         <div
-          className="absolute inset-0 opacity-[0.05]"
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.6) 49%, rgba(255,255,255,0.6) 51%, transparent 52%)",
@@ -304,11 +305,14 @@ export function CareerPage() {
           }}
         ></div>
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 text-center relative z-10">
+          {/* Heading dengan fluid font size */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
             Bergabung Bersama Kami
           </h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto">
+
+          {/* Subtitle dengan max-width yang terjaga di desktop agar tidak terlalu panjang per barisnya */}
+          <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed px-2">
             Jadilah bagian dari tim tutor profesional Bimbel Saka dan bantu
             siswa meraih prestasi terbaik mereka
           </p>
@@ -316,37 +320,41 @@ export function CareerPage() {
       </section>
 
       {/* Requirements & Positions */}
-      <section className="py-20 bg-gradient-to-b from-white to-secondary/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-8">
+      <section className="py-12 md:py-20 bg-gradient-to-b from-white to-secondary/30">
+        <div className="max-w-6xl mx-auto px-5 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-8">
+            {/* Kolon Syarat Menjadi Tutor */}
             <div>
-              <div className="text-center md:text-left mb-8">
-                <h2 className="text-3xl font-bold text-foreground mb-4">
+              <div className="text-left mb-6 md:mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
                   Syarat Menjadi Tutor
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-sm md:text-base text-muted-foreground">
                   Pastikan kamu memenuhi persyaratan berikut
                 </p>
               </div>
 
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-border">
-                <div className="space-y-3">
+              <div className="bg-white rounded-xl p-5 md:p-6 shadow-lg border border-border">
+                <div className="space-y-4">
                   {requirements.map((req, index) => (
                     <div key={index} className="flex items-start gap-3">
                       <CheckCircle className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-                      <span className="text-sm text-foreground">{req}</span>
+                      <span className="text-sm md:text-base text-foreground leading-relaxed">
+                        {req}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
+            {/* Kolom Lowongan Tersedia */}
             <div>
-              <div className="text-center md:text-left mb-8">
-                <h2 className="text-3xl font-bold text-foreground mb-4">
+              <div className="text-left mb-6 md:mb-8">
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
                   Lowongan Tersedia
                 </h2>
-                <p className="text-muted-foreground">
+                <p className="text-sm md:text-base text-muted-foreground">
                   Pilih posisi yang sesuai dengan keahlian kamu
                 </p>
               </div>
@@ -355,26 +363,27 @@ export function CareerPage() {
                 {positions.map((position, index) => (
                   <div
                     key={index}
-                    className="bg-white rounded-xl p-5 shadow-md border border-border hover:shadow-lg transition-all"
+                    className="bg-white rounded-xl p-4 md:p-5 shadow-md border border-border hover:shadow-lg transition-all"
                   >
-                    <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-start justify-between gap-2">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center flex-shrink-0">
                           <Briefcase className="w-5 h-5 text-white" />
                         </div>
                         <div>
-                          <h3 className="font-bold text-foreground mb-1">
+                          <h3 className="font-bold text-sm md:text-base text-foreground mb-1">
                             {position.title}
                           </h3>
-                          <p className="text-xs text-muted-foreground mb-1">
+                          <p className="text-[11px] md:text-xs text-muted-foreground mb-1">
                             {position.subjects}
                           </p>
-                          <p className="text-xs text-primary font-medium">
+                          <p className="text-[11px] md:text-xs text-primary font-semibold uppercase tracking-wide">
                             {position.level}
                           </p>
                         </div>
                       </div>
-                      <div className="px-3 py-1 bg-accent/10 text-accent rounded-lg text-xs font-medium whitespace-nowrap">
+                      {/* Badge Slots */}
+                      <div className="px-2 py-1 bg-accent/10 text-accent rounded-md text-[10px] md:text-xs font-bold whitespace-nowrap border border-accent/20">
                         {position.slots}
                       </div>
                     </div>
@@ -389,11 +398,20 @@ export function CareerPage() {
       {/* Application Form */}
       <section className="py-20 bg-gradient-to-b from-secondary/30 to-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          {/* <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">
               Formulir Pendaftaran Tutor
             </h2>
             <p className="text-lg text-muted-foreground">
+              Isi formulir di bawah ini untuk memulai proses pendaftaran
+            </p>
+          </div> */}
+
+          <div className="text-center mb-6 md:mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+              Formulir Pendaftaran Tutor
+            </h2>
+            <p className="text-sm md:text-base text-muted-foreground">
               Isi formulir di bawah ini untuk memulai proses pendaftaran
             </p>
           </div>
@@ -689,11 +707,11 @@ export function CareerPage() {
       {/* Benefits Section */}
       <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+          <div className="text-center mb-6 md:mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
               Keuntungan Menjadi Tutor
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-sm md:text-base text-muted-foreground">
               Dapatkan berbagai benefit menarik dengan bergabung bersama kami
             </p>
           </div>
@@ -726,11 +744,11 @@ export function CareerPage() {
       {/* FAQ for Tutors */}
       <section className="py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+          <div className="text-center mb-6 md:mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
               Pertanyaan Seputar Menjadi Tutor
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-sm md:text-base text-muted-foreground">
               Jawaban untuk pertanyaan yang sering ditanyakan calon tutor
             </p>
           </div>

@@ -142,8 +142,9 @@ export function RegistrationPage() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-primary/90 pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
+      <section className="bg-gradient-to-br from-primary to-primary/90 pt-28 pb-16 md:pt-40 md:pb-28 relative overflow-hidden">
+        {/* Pattern Overlays */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
           <div
             className="absolute inset-0"
             style={{
@@ -154,7 +155,7 @@ export function RegistrationPage() {
           ></div>
         </div>
         <div
-          className="absolute inset-0 opacity-[0.05]"
+          className="absolute inset-0 opacity-[0.05] pointer-events-none"
           style={{
             backgroundImage:
               "linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.6) 49%, rgba(255,255,255,0.6) 51%, transparent 52%)",
@@ -162,11 +163,14 @@ export function RegistrationPage() {
           }}
         ></div>
 
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 text-center relative z-10">
+          {/* Heading dengan fluid font size */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
             Daftar Les Sekarang
           </h1>
-          <p className="text-xl text-white/90 max-w-3xl mx-auto">
+
+          {/* Subtitle dengan max-width yang terjaga di desktop agar tidak terlalu panjang per barisnya */}
+          <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed px-2">
             Mulai perjalanan belajar kamu bersama tutor profesional Bimbel Saka
           </p>
         </div>
@@ -175,11 +179,11 @@ export function RegistrationPage() {
       {/* Registration Form */}
       <section className="py-20 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">
+          <div className="text-center mb-6 md:mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
               Formulir Pendaftaran Siswa
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-sm md:text-base text-muted-foreground">
               Isi data dengan lengkap untuk memproses pendaftaran kamu
             </p>
           </div>

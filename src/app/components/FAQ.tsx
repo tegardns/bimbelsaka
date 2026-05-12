@@ -44,10 +44,10 @@ export function FAQ() {
           <div className="inline-block px-4 py-1.5 bg-primary/10 rounded-full mb-4">
             <span className="text-sm text-primary font-medium">FAQ</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
             Pertanyaan yang Sering Diajukan
           </h2>
-          <p className="text-lg text-muted-foreground">
+          <p className="text-sm md:text-base text-muted-foreground">
             Temukan jawaban untuk pertanyaan umum seputar Bimbel Saka
           </p>
         </div>

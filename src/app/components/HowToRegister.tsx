@@ -39,15 +39,15 @@ export function HowToRegister() {
           <div className="inline-block px-4 py-1.5 bg-accent/10 rounded-full mb-4">
             <span className="text-sm text-accent font-medium">Cara Daftar</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Mudah & Cepat, Hanya 4 Langkah
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
+            Mudah & Cepat
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Proses pendaftaran yang simple dan tidak ribet
+            Proses pendaftaran yang simple
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {steps.map((step, index) => (
             <div key={index} className="relative">
               <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300 border border-border hover:border-primary/30 h-full">
@@ -73,6 +73,43 @@ export function HowToRegister() {
               )}
             </div>
           ))}
+        </div> */}
+
+        <div className="max-w-2xl mx-auto px-6">
+          <div className="space-y-12">
+            {steps.map((step, index) => (
+              <div key={index} className="flex gap-6 relative group">
+                {/* Garis Alur Vertikal (Line Connector) */}
+                {index !== steps.length - 1 && (
+                  <div className="absolute left-8 top-16 bottom-[-48px] w-[2px] bg-slate-100 group-hover:bg-primary/20 transition-colors" />
+                )}
+
+                {/* Bagian Icon/Angka */}
+                <div className="relative flex-shrink-0">
+                  <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center shadow-lg shadow-emerald-100 relative z-10">
+                    <step.icon className="w-8 h-8 text-white" />
+
+                    {/* Badge Angka Minimalist */}
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-white border-2 border-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-[10px] font-bold text-blue-600">
+                        {index + 1}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bagian Konten Teks */}
+                <div className="flex flex-col justify-center pb-2">
+                  <h3 className="text-lg font-bold text-slate-800 mb-1 group-hover:text-primary transition-colors">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-slate-500 leading-relaxed">
+                    {step.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="mt-12 text-center">

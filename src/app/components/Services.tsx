@@ -37,11 +37,11 @@ export function Services() {
               Program Kami
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
             Program Belajar untuk Setiap Jenjang
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Pilih program sesuai kebutuhan dan tingkat pendidikan kamu
+            Pilih program sesuai kebutuhan
           </p>
         </div>
 
