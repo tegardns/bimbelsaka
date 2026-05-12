@@ -41,6 +41,7 @@ const SakaLocationPopup = () => {
     "check",
   );
 
+  // State untuk delay muncul dan kontrol animasi keluar
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimateOut, setIsAnimateOut] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -57,6 +58,7 @@ const SakaLocationPopup = () => {
   const [waNumber, setWaNumber] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Efek Delay Muncul 0.7 detik pertama kali
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
@@ -64,6 +66,7 @@ const SakaLocationPopup = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Fungsi Close dengan animasi slide-down
   const handleMinimize = () => {
     setIsAnimateOut(true);
     setTimeout(() => {
@@ -72,13 +75,13 @@ const SakaLocationPopup = () => {
     }, 600);
   };
 
-  // FUNGSI HANDLE OPEN: Mengulang step dan reset data dari awal
+  // Fungsi Buka kembali (Reset semua data & step ke awal)
   const handleOpen = () => {
-    setStep("check"); // Kembalikan ke step awal
-    setSelectedDistrict(null); // Reset pilihan lokasi
-    setLevel(""); // Reset pilihan jenjang
-    setWaNumber(""); // Reset nomor WA
-    setSearchTerm(""); // Reset pencarian
+    setStep("check");
+    setSelectedDistrict(null);
+    setLevel("");
+    setWaNumber("");
+    setSearchTerm("");
     setIsMinimized(false);
     setIsAnimateOut(false);
   };
@@ -168,14 +171,27 @@ const SakaLocationPopup = () => {
 
       {!isMinimized && (
         <>
+          {/* Backdrop: Klik area luar untuk close */}
           <div
-            className={`fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-[99] transition-opacity duration-700 ${isAnimateOut ? "opacity-0" : "opacity-100 animate-in fade-in"}`}
+            onClick={handleMinimize}
+            className={`fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-[99] transition-opacity duration-700 cursor-pointer ${
+              isAnimateOut ? "opacity-0" : "opacity-100 animate-in fade-in"
+            }`}
           />
 
+          {/* Container Popup dengan Animasi Slide */}
           <div
-            className={`fixed inset-x-0 bottom-0 z-[100] p-4 md:inset-auto md:left-6 md:bottom-6 md:p-0 md:w-[380px] transition-all duration-1000 cubic-bezier(0.4, 0, 0.2, 1) ${isAnimateOut ? "translate-y-full opacity-0" : "translate-y-0 opacity-100 animate-in slide-in-from-bottom-full"}`}
+            className={`fixed inset-x-0 bottom-0 z-[100] p-4 md:inset-auto md:left-6 md:bottom-6 md:p-0 md:w-[380px] transition-all duration-1000 cubic-bezier(0.4, 0, 0.2, 1) ${
+              isAnimateOut
+                ? "translate-y-full opacity-0"
+                : "translate-y-0 opacity-100 animate-in slide-in-from-bottom-full"
+            }`}
           >
-            <div className="bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden relative">
+            {/* Card Content: e.stopPropagation agar klik di dalam card tidak mentrigger close */}
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden relative cursor-default"
+            >
               <button
                 onClick={handleMinimize}
                 className="absolute right-6 top-6 p-2 bg-slate-50 hover:bg-slate-100 rounded-full z-20 transition-colors"
