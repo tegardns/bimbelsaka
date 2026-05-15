@@ -1,27 +1,24 @@
-import { BookOpen, GraduationCap, Calculator } from "lucide-react";
+import { Pencil, BookOpen, Atom } from "lucide-react";
 
 export function Services() {
   const programs = [
     {
-      icon: Calculator,
+      icon: Pencil,
       title: "Calistung",
       subtitle: "Usia 4-7 Tahun",
-      description:
-        "Belajar sambil bermain untuk menumbuhkan minat baca, tulis, dan hitung anak.",
+      labels: ["Membaca", "Menulis", "Berhitung"],
     },
     {
       icon: BookOpen,
-      title: "SD - SMP",
-      subtitle: "Kelas 1-9",
-      description:
-        "Pendalaman materi kurikulum, persiapan ujian, dan pemantapan konsep dasar.",
+      title: "SD",
+      subtitle: "Kelas 1-6",
+      labels: ["Semua Mata Pelajaran"],
     },
     {
-      icon: GraduationCap,
-      title: "SMA (Coming Soon)",
-      subtitle: "Kelas 10-12",
-      description:
-        "Persiapan UTBK, ujian sekolah, dan pendalaman materi untuk masuk PTN impian.",
+      icon: Atom,
+      title: "SMP",
+      subtitle: "Kelas 7-9",
+      labels: ["Matematika", "IPA", "Bahasa Inggris"],
     },
   ];
 
@@ -58,12 +55,21 @@ export function Services() {
               <h3 className="font-bold text-foreground mb-1">
                 {program.title}
               </h3>
-              <p className="text-sm text-primary font-medium mb-3">
+              <p className="text-sm text-primary font-medium mb-4">
                 {program.subtitle}
               </p>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {program.description}
-              </p>
+
+              {/* Bagian Label Mata Pelajaran */}
+              <div className="flex flex-wrap gap-2">
+                {program.labels.map((label, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full border border-slate-200"
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
             </div>
           ))}
         </div>
