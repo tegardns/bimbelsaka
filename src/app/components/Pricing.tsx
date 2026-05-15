@@ -10,18 +10,36 @@ export function Pricing() {
     },
     { program: "SD", level: "Kelas 1-6", price: "35k", duration: "90 menit" },
     { program: "SMP", level: "Kelas 7-9", price: "40k", duration: "90 menit" },
+    // {
+    //   program: "SMA",
+    //   level: "Kelas 10-12",
+    //   price: "Segera",
+    //   duration: "Segera",
+    // },
+  ];
+
+  const packages = [
     {
-      program: "SMA",
-      level: "Kelas 10-12",
-      price: "Segera",
-      duration: "Segera",
+      ProgramPaket: "Calistung",
+      Durasi: "75 menit",
+      HargaPaket: "25k/siswa",
+    },
+    {
+      ProgramPaket: "SD",
+      Durasi: "90 menit",
+      HargaPaket: "25k/siswa",
+    },
+    {
+      ProgramPaket: "SMP",
+      Durasi: "90 menit",
+      HargaPaket: "30k/siswa",
     },
   ];
 
   const benefits = [
     "Sudah termasuk biaya transport tutor",
     "Dapat worksheet/modul pembelajaran",
-    "Reward bulanan bagi siswa yang aktif",
+    "Garansi ganti tutor jika tidak cocok",
   ];
 
   return (
@@ -78,6 +96,53 @@ export function Pricing() {
                     </td>
                     <td className="px-4 md:px-6 py-4 text-muted-foreground text-sm md:text-base">
                       {item.duration}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <h3 className="font-semibold text-foreground mb-4 text-center pt-12">
+          Ambil paket ber-2 💙
+        </h3>
+        <p className="text-sm text-foreground p-x-6 mb-8 text-center">
+          Khusus untuk <b>Program Paket</b> mohon chat admin terlebih dahulu.
+        </p>
+
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-border">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-accent to-primary/70">
+                <tr>
+                  <th className="px-4 md:px-6 py-4 text-left text-white font-semibold">
+                    Program
+                  </th>
+                  {/* <th className="px-3 md:px-6 py-4 text-left text-white font-semibold text-sm md:text-base">Tingkat</th> */}
+                  <th className="px-4 md:px-6 py-4 text-left text-white font-semibold">
+                    Harga/Sesi
+                  </th>
+                  <th className="px-4 md:px-6 py-4 text-left text-white font-semibold">
+                    Durasi
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {packages.map((item, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-secondary/20 transition-colors"
+                  >
+                    <td className="px-4 md:px-6 py-4 font-semibold text-foreground">
+                      {item.ProgramPaket}
+                    </td>
+                    {/* <td className="px-3 md:px-6 py-4 text-muted-foreground text-xs md:text-sm">{item.level}</td> */}
+                    <td className="px-4 md:px-6 py-4 font-bold text-accent-600 text-lg ">
+                      {item.HargaPaket}
+                    </td>
+                    <td className="px-4 md:px-6 py-4 text-muted-foreground text-sm md:text-base">
+                      {item.Durasi}
                     </td>
                   </tr>
                 ))}
