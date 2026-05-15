@@ -219,7 +219,7 @@ const SakaLocationPopup = () => {
                     <div className="space-y-4">
                       <div className="space-y-1.5" ref={dropdownRef}>
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
-                          Kecamatan (Purbalingga)
+                          Kecamatan (Kab. Purbalingga)
                         </label>
                         <div className="relative">
                           <div

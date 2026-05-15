@@ -16,6 +16,11 @@ export function FAQ() {
         "Ya, semua biaya transport tutor sudah termasuk dalam harga yang tertera. Kamu tidak perlu membayar biaya tambahan apapun.",
     },
     {
+      question: "Apakah ada biaya tambahan selama proses belajar?",
+      answer:
+        "Tidak, semua biaya sudah termasuk di dalam paket harga tiap sesi. Biaya tambahan mungkin akan berlaku jika pindah jenjang kelas (e.g: SMP ke SMA) atau request tutor dengan spesialisasi tertentu, namun hal ini akan diinformasikan terlebih dahulu sebelum proses pendaftaran.",
+    },
+    {
       question: "Berapa minimal pertemuan dalam seminggu?",
       answer:
         "Minimal 2 kali pertemuan dalam seminggu. Namun, jadwal dapat disesuaikan dengan kebutuhan dan kesepakatan bersama tutor.",
@@ -28,7 +33,7 @@ export function FAQ() {
     {
       question: "Bagaimana sistem pembayaran di Bimbel Saka?",
       answer:
-        "Pembayaran dilakukan per bulan dengan sistem transfer atau tunai. Detail pembayaran akan dijelaskan saat proses pendaftaran.",
+        "Pembayaran dilakukan per minggu/bulan dengan sistem transfer. Detail pembayaran akan dijelaskan saat proses pendaftaran.",
     },
     {
       question: "Apakah bisa request tutor tertentu?",

@@ -22,7 +22,7 @@ export function WhyChooseUs() {
       icon: Heart,
       title: "Tutor Pasti Friendly 💙",
       description:
-        "Kami selalu mengutamakan tutor friendly untuk membantu siswa lebih nyaman dalam belajar.",
+        "Kami selalu mengutamakan tutor yang ramah untuk membantu siswa lebih nyaman dalam belajar.",
     },
     {
       icon: Clock,
