@@ -3,7 +3,8 @@ import {
   Users,
   Clock,
   BookOpen,
-  CheckCircle2,
+  // CheckCircle2,
+  Heart,
   RefreshCw,
 } from "lucide-react";
 import { ImageSlider } from "./ImageSlider";
@@ -16,6 +17,12 @@ export function WhyChooseUs() {
       title: "Tutor Kompeten",
       description:
         "Tim pengajar berpengalaman dengan metode mengajar yang efektif.",
+    },
+    {
+      icon: Heart,
+      title: "Tutor Pasti Friendly 💙",
+      description:
+        "Kami selalu mengutamakan tutor friendly untuk membantu siswa lebih nyaman dalam belajar.",
     },
     {
       icon: Clock,
@@ -40,12 +47,6 @@ export function WhyChooseUs() {
       title: "Garansi Ganti Tutor",
       description:
         "Tidak cocok dengan tutor? Kami sediakan garansi ganti tutor gratis.",
-    },
-    {
-      icon: CheckCircle2,
-      title: "Laporan Perkembangan Rutin",
-      description:
-        "Orang tua mendapat laporan berkala untuk memantau kemajuan belajar anak.",
     },
   ];
 
