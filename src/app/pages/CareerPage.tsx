@@ -412,7 +412,9 @@ export function CareerPage() {
               Formulir Pendaftaran Tutor
             </h2>
             <p className="text-sm md:text-base text-muted-foreground">
-              Isi formulir di bawah ini untuk memulai proses pendaftaran
+              Isi formulir di bawah ini untuk daftar waiting list tutor
+              Purbalingga. Kami akan menghubungi ketika ada siswa yang
+              membutuhkan di Purbalingga.
             </p>
           </div>
 
