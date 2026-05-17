@@ -413,7 +413,7 @@ export function CareerPage() {
             </h2>
             <p className="text-sm md:text-base text-muted-foreground">
               Isi formulir di bawah ini untuk daftar waiting list tutor
-              Purbalingga. Kami akan menghubungi ketika ada siswa yang
+              Purbalingga. Kami segera menghubungi ketika ada siswa yang
               membutuhkan di Purbalingga.
             </p>
           </div>
