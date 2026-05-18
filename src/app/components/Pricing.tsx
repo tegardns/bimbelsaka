@@ -5,11 +5,11 @@ export function Pricing() {
     {
       program: "Calistung",
       level: "Usia 4-7 Tahun",
-      price: "35k",
+      price: "35rb",
       duration: "75 menit",
     },
-    { program: "SD", level: "Kelas 1-6", price: "35k", duration: "90 menit" },
-    { program: "SMP", level: "Kelas 7-9", price: "40k", duration: "90 menit" },
+    { program: "SD", level: "Kelas 1-6", price: "35rb", duration: "90 menit" },
+    { program: "SMP", level: "Kelas 7-9", price: "40rb", duration: "90 menit" },
     // {
     //   program: "SMA",
     //   level: "Kelas 10-12",
@@ -22,17 +22,35 @@ export function Pricing() {
     {
       ProgramPaket: "Calistung",
       Durasi: "75 menit",
-      HargaPaket: "25k/siswa",
+      HargaPaket: "25rb/siswa",
     },
     {
       ProgramPaket: "SD",
       Durasi: "90 menit",
-      HargaPaket: "25k/siswa",
+      HargaPaket: "25rb/siswa",
     },
     {
       ProgramPaket: "SMP",
       Durasi: "90 menit",
-      HargaPaket: "30k/siswa",
+      HargaPaket: "30rb/siswa",
+    },
+  ];
+
+  const bulanan = [
+    {
+      ProgramPaket: "Calistung",
+      Harga: "270rb",
+      Pertemuan: "8x/bulan",
+    },
+    {
+      ProgramPaket: "SD",
+      Harga: "270rb",
+      Pertemuan: "8x/bulan",
+    },
+    {
+      ProgramPaket: "SMP",
+      Harga: "300rb",
+      Pertemuan: "8x/bulan",
     },
   ];
 
@@ -104,6 +122,8 @@ export function Pricing() {
           </div>
         </div>
 
+        {/* Paket ber-2 */}
+
         <h3 className="font-semibold text-foreground mb-4 text-center pt-12">
           Ambil paket ber-2 💙
         </h3>
@@ -143,6 +163,57 @@ export function Pricing() {
                     </td>
                     <td className="px-4 md:px-6 py-4 text-muted-foreground text-sm md:text-base">
                       {item.Durasi}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Paket bulanan */}
+
+        <h3 className="font-semibold text-foreground mb-4 text-center pt-12">
+          Ambil paket bulanan 💙
+        </h3>
+        <p className="text-sm text-foreground p-x-6 mb-8 text-center">
+          Paket bulanan adalah program belajar dengan jadwal tetap setiap minggu
+          selama 1 bulan. Cocok untuk yang ingin konsisten belajar dan
+          mendapatkan hasil maksimal!
+        </p>
+
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-border">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gradient-to-r from-accent to-primary/70">
+                <tr>
+                  <th className="px-4 md:px-6 py-4 text-left text-white font-semibold">
+                    Program
+                  </th>
+                  {/* <th className="px-3 md:px-6 py-4 text-left text-white font-semibold text-sm md:text-base">Tingkat</th> */}
+                  <th className="px-4 md:px-6 py-4 text-left text-white font-semibold">
+                    Harga
+                  </th>
+                  <th className="px-4 md:px-6 py-4 text-left text-white font-semibold">
+                    Sesi
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {bulanan.map((item, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-secondary/20 transition-colors"
+                  >
+                    <td className="px-4 md:px-6 py-4 font-semibold text-foreground">
+                      {item.ProgramPaket}
+                    </td>
+                    {/* <td className="px-3 md:px-6 py-4 text-muted-foreground text-xs md:text-sm">{item.level}</td> */}
+                    <td className="px-4 md:px-6 py-4 font-bold text-accent-600 text-lg ">
+                      {item.Harga}
+                    </td>
+                    <td className="px-4 md:px-6 py-4 text-muted-foreground text-sm md:text-base">
+                      {item.Pertemuan}
                     </td>
                   </tr>
                 ))}

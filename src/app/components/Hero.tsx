@@ -50,7 +50,7 @@ export function Hero() {
 
             <div className="inline-block px-3 md:px-4 py-1.5 bg-white/20 backdrop-blur-sm rounded-full mb-3 md:mb-6">
               <span className="text-xs md:text-sm">
-                🎓 Bimbingan Belajar Terpercaya di Purbalingga
+                🎓 Les Privat Purbalingga & Purwokerto
               </span>
             </div>
 

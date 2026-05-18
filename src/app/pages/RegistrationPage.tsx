@@ -275,7 +275,7 @@ export function RegistrationPage() {
                   value={formData.address}
                   onChange={(e) => handleChange("address", e.target.value)}
                   rows={3}
-                  placeholder="Alamat lengkap di Purbalingga"
+                  placeholder="Alamat lengkap di Purbalingga/Purwokerto"
                   className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
                 />
               </div>

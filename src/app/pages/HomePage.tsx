@@ -36,15 +36,15 @@ export function HomePage() {
         target="_blank"
         rel="noopener noreferrer"
         // Pakai class unik 'wa-float' supaya tidak tabrakan dengan navbar
-        className="wa-float fixed bottom-6 right-6 z-50 flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition-transform duration-300 hover:scale-110 active:scale-95 focus:outline-none"
+        className="wa-float fixed bottom-6 right-6 z-50 flex h-14 w-14 md:h-14 md:w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition-transform duration-300 hover:scale-110 active:scale-95 focus:outline-none"
       >
         <img
           src={WhatsappLogo}
           alt="WhatsApp"
-          className="h-8 w-8 md:h-10 md:w-10 object-contain"
+          className="h-8 w-8 md:h-8 md:w-8 object-contain"
         />
 
-        <style jsx>{`
+        <style>{`
           /* Animasi khusus hanya untuk elemen dengan class wa-float */
           .wa-float:hover::after {
             content: "";

@@ -7,6 +7,7 @@ import {
   AlertCircle,
   MessageCircle,
   ChevronDown,
+  ArrowLeft,
 } from "lucide-react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -15,73 +16,70 @@ if (!API_BASE_URL) {
   throw new Error("VITE_API_BASE_URL belum diset di .env.local");
 }
 
-const DISTRICTS_DATA = [
-  { name: "Purbalingga", distance: 0.5 },
-  { name: "Kalimanah", distance: 3.2 },
-  { name: "Padamara", distance: 4.1 },
-  { name: "Bojongsari", distance: 4.8 },
-  { name: "Kutasari", distance: 4.9 },
-  { name: "Mrebet", distance: 8.5 },
-  { name: "Bukateja", distance: 10.2 },
-  { name: "Kaligondang", distance: 7.4 },
-  { name: "Kejobong", distance: 15.6 },
-  { name: "Kemangkon", distance: 12.1 },
-  { name: "Kertanegara", distance: 18.3 },
-  { name: "Karanganyar", distance: 20.1 },
-  { name: "Karangmoncol", distance: 24.5 },
-  { name: "Karangreja", distance: 28.0 },
-  { name: "Karangjambu", distance: 32.0 },
-  { name: "Bobotsari", distance: 14.2 },
-  { name: "Pengadegan", distance: 16.5 },
-  { name: "Rembang", distance: 26.0 },
-];
+type City = "Purbalingga" | "Purwokerto";
+
+type District = {
+  name: string;
+  distanceKm: number;
+  available: boolean;
+};
 
 const SakaLocationPopup = () => {
-  const [step, setStep] = useState<"check" | "available" | "unavailable">(
-    "check",
-  );
-
-  // State untuk delay muncul dan kontrol animasi keluar
+  const [step, setStep] = useState<
+    "city" | "check" | "available" | "unavailable"
+  >("city");
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimateOut, setIsAnimateOut] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-
   const [showSuccess, setShowSuccess] = useState(false);
+
+  const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [selectedDistrict, setSelectedDistrict] = useState<District | null>(
+    null,
+  );
+
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [loadingDistricts, setLoadingDistricts] = useState(false);
+
   const [isOpenDropdown, setIsOpenDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedDistrict, setSelectedDistrict] = useState<{
-    name: string;
-    distance: number;
-  } | null>(null);
   const [level, setLevel] = useState("");
   const [waNumber, setWaNumber] = useState("");
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Efek Delay Muncul 0.7 detik pertama kali
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 700);
+    const timer = setTimeout(() => setIsVisible(true), 700);
     return () => clearTimeout(timer);
   }, []);
 
-  // Fungsi Close dengan animasi slide-down
-  const handleMinimize = () => {
-    setIsAnimateOut(true);
-    setTimeout(() => {
-      setIsMinimized(true);
-      setIsAnimateOut(false);
-    }, 600);
-  };
-
-  // Fungsi Buka kembali (Reset semua data & step ke awal)
-  const handleOpen = () => {
-    setStep("check");
+  const resetPopupState = () => {
+    setStep("city");
+    setSelectedCity(null);
     setSelectedDistrict(null);
+    setDistricts([]);
+    setSearchTerm("");
     setLevel("");
     setWaNumber("");
-    setSearchTerm("");
+    setIsOpenDropdown(false);
+    setShowSuccess(false);
+    setLoading(false);
+    setLoadingDistricts(false);
+  };
+
+  const handleMinimize = () => {
+    setIsAnimateOut(true);
+
+    setTimeout(() => {
+      resetPopupState();
+      setIsMinimized(true);
+      setIsAnimateOut(false);
+    }, 400);
+  };
+
+  const handleOpen = () => {
+    resetPopupState();
     setIsMinimized(false);
     setIsAnimateOut(false);
   };
@@ -95,26 +93,72 @@ const SakaLocationPopup = () => {
         setIsOpenDropdown(false);
       }
     };
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filteredDistricts = DISTRICTS_DATA.filter((d) =>
-    d.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  ).sort((a, b) => a.distance - b.distance);
+  useEffect(() => {
+    const fetchDistricts = async () => {
+      if (!selectedCity || step !== "check") {
+        setDistricts([]);
+        return;
+      }
+
+      try {
+        setLoadingDistricts(true);
+
+        const response = await fetch(
+          `${API_BASE_URL}/api/coverage/districts?city=${selectedCity}`,
+        );
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result?.message || "Gagal mengambil data kecamatan");
+        }
+
+        setDistricts(result.data || []);
+      } catch (err) {
+        console.error(err);
+        setDistricts([]);
+      } finally {
+        setLoadingDistricts(false);
+      }
+    };
+
+    fetchDistricts();
+  }, [selectedCity, step]);
+
+  const filteredDistricts = districts
+    .filter((d) => d.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    .sort((a, b) => a.distanceKm - b.distanceKm);
 
   const handleCheckLocation = async () => {
-    if (!selectedDistrict || !level) return;
+    if (!selectedCity || !selectedDistrict || !level) return;
+
     try {
       setLoading(true);
+
       const response = await fetch(`${API_BASE_URL}/api/coverage/check`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ district: selectedDistrict.name, level }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          city: selectedCity,
+          district: selectedDistrict.name,
+          level,
+        }),
       });
+
       const result = await response.json();
-      if (!response.ok) throw new Error(result?.message || "Gagal cek lokasi");
-      if (result.available) {
+
+      if (!response.ok) {
+        throw new Error(result?.message || "Gagal cek lokasi");
+      }
+
+      if (result.data?.available) {
         setStep("available");
       } else {
         setStep("unavailable");
@@ -133,19 +177,33 @@ const SakaLocationPopup = () => {
         alert("Nomor WA wajib diisi");
         return;
       }
+
+      if (!selectedCity || !selectedDistrict) {
+        alert("Lokasi belum dipilih");
+        return;
+      }
+
       setLoading(true);
+
       const response = await fetch(`${API_BASE_URL}/api/coverage/request`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
+          city: selectedCity,
           waNumber,
-          district: selectedDistrict?.name,
+          district: selectedDistrict.name,
           level,
         }),
       });
+
       const result = await response.json();
-      if (!response.ok)
+
+      if (!response.ok) {
         throw new Error(result?.message || "Gagal kirim request");
+      }
+
       setShowSuccess(true);
     } catch (err) {
       console.error(err);
@@ -164,6 +222,7 @@ const SakaLocationPopup = () => {
           onClick={handleOpen}
           className="fixed bottom-24 right-6 z-[110] flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-2xl border border-slate-200 transition-all hover:scale-110 hover:border-[#0066FF] animate-in fade-in zoom-in duration-500"
           aria-label="Buka cek lokasi"
+          title="Cek Ketersediaan Tutor"
         >
           <MapPin className="h-6 w-6 !text-white" />
         </button>
@@ -171,7 +230,6 @@ const SakaLocationPopup = () => {
 
       {!isMinimized && (
         <>
-          {/* Backdrop: Klik area luar untuk close */}
           <div
             onClick={handleMinimize}
             className={`fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-[99] transition-opacity duration-700 cursor-pointer ${
@@ -179,15 +237,13 @@ const SakaLocationPopup = () => {
             }`}
           />
 
-          {/* Container Popup dengan Animasi Slide */}
           <div
-            className={`fixed inset-x-0 bottom-0 z-[100] p-4 md:inset-auto md:left-6 md:bottom-6 md:p-0 md:w-[380px] transition-all duration-1000 cubic-bezier(0.4, 0, 0.2, 1) ${
+            className={`fixed inset-x-0 bottom-0 z-[100] p-4 md:inset-auto md:left-6 md:bottom-6 md:p-0 md:w-[380px] transition-all duration-700 ${
               isAnimateOut
                 ? "translate-y-full opacity-0"
                 : "translate-y-0 opacity-100 animate-in slide-in-from-bottom-full"
             }`}
           >
-            {/* Card Content: e.stopPropagation agar klik di dalam card tidak mentrigger close */}
             <div
               onClick={(e) => e.stopPropagation()}
               className="bg-white rounded-[2.5rem] shadow-2xl border border-slate-100 overflow-hidden relative cursor-default"
@@ -195,6 +251,7 @@ const SakaLocationPopup = () => {
               <button
                 onClick={handleMinimize}
                 className="absolute right-6 top-6 p-2 bg-slate-50 hover:bg-slate-100 rounded-full z-20 transition-colors"
+                aria-label="Minimize popup"
               >
                 <X className="w-4 h-4 text-slate-400" />
               </button>
@@ -202,7 +259,7 @@ const SakaLocationPopup = () => {
               <div className="h-2 bg-gradient-to-r from-[#0066FF] via-[#00CC99] to-[#0066FF]" />
 
               <div className="p-8">
-                {step === "check" && (
+                {step === "city" && (
                   <div className="space-y-6">
                     <div className="text-center md:text-left">
                       <div className="inline-flex p-3 bg-blue-50 rounded-2xl mb-3 animate-bounce shadow-sm shadow-blue-100">
@@ -211,7 +268,58 @@ const SakaLocationPopup = () => {
                       <h2 className="text-xl font-extrabold text-slate-800 tracking-tight">
                         Cek Ketersediaan Tutor
                       </h2>
+                      <p className="text-[12px] text-slate-500 mt-1 font-medium">
+                        Kamu di Purwokerto atau Purbalingga?
+                      </p>
                       <p className="text-[11px] text-slate-400 mt-1 italic font-medium">
+                        *Kami tidak menyimpan data pribadi Anda pada tahap ini.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3">
+                      {(["Purbalingga", "Purwokerto"] as City[]).map((city) => (
+                        <button
+                          key={city}
+                          onClick={() => {
+                            setSelectedCity(city);
+                            setSelectedDistrict(null);
+                            setSearchTerm("");
+                            setLevel("");
+                            setStep("check");
+                          }}
+                          className="flex items-center justify-between w-full p-4 text-sm font-bold border border-slate-200 rounded-2xl hover:border-[#0066FF] hover:bg-blue-50/50 transition-all group"
+                        >
+                          <span className="text-slate-700 group-hover:text-[#0066FF]">
+                            {city}
+                          </span>
+                          <ChevronDown className="w-4 h-4 -rotate-90 text-slate-300 group-hover:text-[#0066FF]" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {step === "check" && (
+                  <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-500">
+                    <button
+                      onClick={() => {
+                        setStep("city");
+                        setSelectedCity(null);
+                        setSelectedDistrict(null);
+                        setSearchTerm("");
+                        setLevel("");
+                        setIsOpenDropdown(false);
+                      }}
+                      className="flex items-center gap-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-[#0066FF] transition-colors"
+                    >
+                      <ArrowLeft className="w-3 h-3" /> Kembali
+                    </button>
+
+                    <div className="text-center md:text-left">
+                      <h2 className="text-xl font-extrabold text-slate-800 tracking-tight leading-tight">
+                        Kecamatan di {selectedCity}
+                      </h2>
+                      <p className="text-[11px] text-slate-400 mt-1 italic">
                         *Kami tidak menyimpan data pribadi Anda pada tahap ini.
                       </p>
                     </div>
@@ -219,7 +327,7 @@ const SakaLocationPopup = () => {
                     <div className="space-y-4">
                       <div className="space-y-1.5" ref={dropdownRef}>
                         <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
-                          Kecamatan (Kab. Purbalingga)
+                          Cari Kecamatan
                         </label>
                         <div className="relative">
                           <div
@@ -235,10 +343,14 @@ const SakaLocationPopup = () => {
                             >
                               {selectedDistrict
                                 ? selectedDistrict.name
-                                : "Cari Lokasi..."}
+                                : loadingDistricts
+                                  ? "Memuat kecamatan..."
+                                  : "Pilih Kecamatan..."}
                             </span>
                             <ChevronDown
-                              className={`w-4 h-4 text-slate-400 transition-transform ${isOpenDropdown ? "rotate-180" : ""}`}
+                              className={`w-4 h-4 text-slate-400 transition-transform ${
+                                isOpenDropdown ? "rotate-180" : ""
+                              }`}
                             />
                           </div>
 
@@ -249,7 +361,7 @@ const SakaLocationPopup = () => {
                                   <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
                                   <input
                                     type="text"
-                                    placeholder="Ketik nama kecamatan..."
+                                    placeholder="Cari..."
                                     className="w-full bg-slate-50 py-2 pl-9 pr-4 text-xs outline-none rounded-lg focus:bg-white focus:ring-1 focus:ring-blue-100 transition-all"
                                     value={searchTerm}
                                     onChange={(e) =>
@@ -275,12 +387,12 @@ const SakaLocationPopup = () => {
                                         {d.name}
                                       </span>
                                       <span className="text-[10px] text-slate-300 group-hover:text-blue-300 font-bold uppercase">
-                                        {d.distance} KM
+                                        {d.distanceKm} KM
                                       </span>
                                     </div>
                                   ))
                                 ) : (
-                                  <div className="p-4 text-center text-xs text-slate-400 font-medium italic">
+                                  <div className="p-4 text-center text-xs text-slate-400 italic">
                                     Lokasi tidak ditemukan...
                                   </div>
                                 )}
@@ -300,7 +412,11 @@ const SakaLocationPopup = () => {
                               key={item}
                               type="button"
                               onClick={() => setLevel(item)}
-                              className={`py-2.5 text-xs font-bold rounded-xl border transition-all ${level === item ? "bg-[#0066FF] text-white border-[#0066FF] shadow-md shadow-blue-100" : "bg-white text-slate-600 border-slate-200 hover:border-[#0066FF]"}`}
+                              className={`py-2.5 text-xs font-bold rounded-xl border transition-all ${
+                                level === item
+                                  ? "bg-[#0066FF] text-white border-[#0066FF] shadow-md shadow-blue-100"
+                                  : "bg-white text-slate-600 border-slate-200 hover:border-[#0066FF]"
+                              }`}
                             >
                               {item}
                             </button>
@@ -338,12 +454,13 @@ const SakaLocationPopup = () => {
                         Tutor Tersedia!
                       </h3>
                       <p className="text-sm text-slate-500">
-                        Yay🎉 Tutor Tersedia di Wilayah{" "}
+                        Yay🎉 Tutor tersedia di wilayah{" "}
                         <span className="font-bold text-[#0066FF]">
                           {selectedDistrict?.name}
                         </span>
                       </p>
                     </div>
+
                     <div className="space-y-3 pt-2 text-left">
                       <div className="relative">
                         <span className="absolute left-4 top-3.5 text-sm font-bold text-slate-400">
@@ -359,9 +476,10 @@ const SakaLocationPopup = () => {
                           className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-14 pr-4 text-sm outline-none focus:ring-4 focus:ring-emerald-50 focus:border-[#00CC99] transition-all"
                         />
                         <p className="text-sm text-slate-500 mt-2">
-                          Masukkan nomor WA aktif untuk terhubung dengan admin
+                          Masukkan nomor WA aktif untuk dihubungi admin
                         </p>
                       </div>
+
                       <button
                         onClick={handleSubmitRequest}
                         disabled={loading}
@@ -379,28 +497,35 @@ const SakaLocationPopup = () => {
                     <div className="w-20 h-20 bg-orange-50 rounded-[2.5rem] flex items-center justify-center mx-auto text-orange-500">
                       <AlertCircle className="w-12 h-12" />
                     </div>
+
                     <div className="space-y-2">
                       <h3 className="text-xl font-bold text-slate-800">
                         Belum Tersedia
                       </h3>
                       <p className="text-sm text-slate-500 px-4 leading-relaxed">
-                        Mohon maaf saaat ini lokasi{" "}
+                        Mohon maaf saat ini lokasi{" "}
                         <span className="font-bold">
                           {selectedDistrict?.name}
                         </span>{" "}
-                        tutor belum tersedia{" "}
+                        tutor belum tersedia.
                       </p>
                     </div>
+
                     <div className="flex flex-col gap-3 pt-2">
                       <button
                         onClick={() => {
-                          setStep("check");
+                          setStep("city");
+                          setSelectedCity(null);
                           setSelectedDistrict(null);
+                          setSearchTerm("");
+                          setLevel("");
+                          setIsOpenDropdown(false);
                         }}
                         className="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl transition-all active:scale-95 border border-slate-200"
                       >
                         Cek Wilayah Lain
                       </button>
+
                       <div className="relative">
                         <div
                           className="absolute inset-0 flex items-center"
@@ -414,10 +539,11 @@ const SakaLocationPopup = () => {
                           </span>
                         </div>
                       </div>
+
                       <button
                         onClick={() => {
                           const adminNumber = "62895357409769";
-                          const message = `Halo Admin Saka! Lokasi saya di ${selectedDistrict?.name} (${selectedDistrict?.distance}km) saat ini belum terjangkau sistem. Apakah tetap bisa dibantu untuk tutor ke sini?`;
+                          const message = `Halo Admin Saka! Lokasi saya di ${selectedDistrict?.name} (${selectedDistrict?.distanceKm}km) saat ini belum terjangkau sistem. Apakah tetap bisa dibantu untuk tutor ke sini?`;
                           window.open(
                             `https://api.whatsapp.com/send?phone=${adminNumber}&text=${encodeURIComponent(message)}`,
                             "_blank",
@@ -445,14 +571,20 @@ const SakaLocationPopup = () => {
                 <CheckCircle2 className="h-8 w-8 text-green-600" />
               </div>
             </div>
+
             <h3 className="mb-3 text-center text-2xl font-bold text-slate-800">
               Request Terkirim 🎉
             </h3>
+
             <p className="mb-6 text-center text-slate-500">
               Admin akan segera menghubungi terkait ketersediaan tutor.
             </p>
+
             <button
-              onClick={() => setShowSuccess(false)}
+              onClick={() => {
+                setShowSuccess(false);
+                handleMinimize();
+              }}
               className="w-full rounded-xl bg-[#00CC99] px-6 py-3 font-medium text-white transition-all hover:bg-[#00B88A]"
             >
               OK
