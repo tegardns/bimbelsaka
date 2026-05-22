@@ -31,7 +31,6 @@ const SakaLocationPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimateOut, setIsAnimateOut] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
 
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [selectedDistrict, setSelectedDistrict] = useState<District | null>(
@@ -45,7 +44,12 @@ const SakaLocationPopup = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [level, setLevel] = useState("");
-  const [waNumber, setWaNumber] = useState("");
+
+  // Form States pendaftaran siswa
+  const [studentName, setStudentName] = useState("");
+  const [studentAddress, setStudentAddress] = useState("");
+  const [selectedClass, setSelectedClass] = useState("");
+  const [selectedSubject, setSelectedSubject] = useState("");
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -61,16 +65,17 @@ const SakaLocationPopup = () => {
     setDistricts([]);
     setSearchTerm("");
     setLevel("");
-    setWaNumber("");
+    setStudentName("");
+    setStudentAddress("");
+    setSelectedClass("");
+    setSelectedSubject("");
     setIsOpenDropdown(false);
-    setShowSuccess(false);
     setLoading(false);
     setLoadingDistricts(false);
   };
 
   const handleMinimize = () => {
     setIsAnimateOut(true);
-
     setTimeout(() => {
       resetPopupState();
       setIsMinimized(true);
@@ -93,7 +98,6 @@ const SakaLocationPopup = () => {
         setIsOpenDropdown(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -104,20 +108,15 @@ const SakaLocationPopup = () => {
         setDistricts([]);
         return;
       }
-
       try {
         setLoadingDistricts(true);
-
         const response = await fetch(
           `${API_BASE_URL}/api/coverage/districts?city=${selectedCity}`,
         );
-
         const result = await response.json();
-
         if (!response.ok) {
           throw new Error(result?.message || "Gagal mengambil data kecamatan");
         }
-
         setDistricts(result.data || []);
       } catch (err) {
         console.error(err);
@@ -126,7 +125,6 @@ const SakaLocationPopup = () => {
         setLoadingDistricts(false);
       }
     };
-
     fetchDistricts();
   }, [selectedCity, step]);
 
@@ -136,28 +134,21 @@ const SakaLocationPopup = () => {
 
   const handleCheckLocation = async () => {
     if (!selectedCity || !selectedDistrict || !level) return;
-
     try {
       setLoading(true);
-
       const response = await fetch(`${API_BASE_URL}/api/coverage/check`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           city: selectedCity,
           district: selectedDistrict.name,
           level,
         }),
       });
-
       const result = await response.json();
-
       if (!response.ok) {
         throw new Error(result?.message || "Gagal cek lokasi");
       }
-
       if (result.data?.available) {
         setStep("available");
       } else {
@@ -172,45 +163,120 @@ const SakaLocationPopup = () => {
   };
 
   const handleSubmitRequest = async () => {
+    if (!studentName || !studentAddress || !selectedClass) {
+      alert("Mohon lengkapi semua field pendaftaran.");
+      return;
+    }
+
+    if (level !== "Calistung" && !selectedSubject) {
+      alert("Mohon pilih mata pelajaran terlebih dahulu.");
+      return;
+    }
+
     try {
-      if (!waNumber) {
-        alert("Nomor WA wajib diisi");
-        return;
-      }
-
-      if (!selectedCity || !selectedDistrict) {
-        alert("Lokasi belum dipilih");
-        return;
-      }
-
       setLoading(true);
 
-      const response = await fetch(`${API_BASE_URL}/api/coverage/request`, {
+      const response = await fetch(`${API_BASE_URL}/api/quick-registration`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           city: selectedCity,
-          waNumber,
-          district: selectedDistrict.name,
+          district: selectedDistrict?.name,
+
           level,
+
+          studentName,
+          studentAddress,
+
+          classOrAge: selectedClass,
+
+          subject: level === "Calistung" ? null : selectedSubject,
         }),
       });
 
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result?.message || "Gagal kirim request");
+        throw new Error(result?.message || "Gagal menyimpan data");
       }
 
-      setShowSuccess(true);
+      const adminNumber = "62895357409769";
+
+      let messageText =
+        `Halo Kak Melly! Saya mau mendaftar Les Privat.%0A%0A` +
+        `📝 *DATA PENDAFTARAN SISWA:*%0A` +
+        `• Nama Siswa: ${studentName}%0A` +
+        `• Kota/Kabupaten: ${selectedCity}%0A` +
+        `• Kecamatan: ${selectedDistrict?.name}%0A` +
+        `• Alamat Rumah: ${studentAddress}%0A` +
+        `• Jenjang: ${level}%0A` +
+        `• ${level === "Calistung" ? "Umur Anak" : "Kelas"}: ${selectedClass}`;
+
+      if (level !== "Calistung") {
+        messageText += `%0A• Mata Pelajaran: ${selectedSubject}`;
+      }
+
+      window.open(
+        `https://api.whatsapp.com/send?phone=${adminNumber}&text=${messageText}`,
+        "_blank",
+      );
+
+      handleMinimize();
     } catch (err) {
       console.error(err);
-      alert("Gagal mengirim request");
+      alert("Gagal menyimpan data");
     } finally {
       setLoading(false);
     }
+  };
+
+  const renderClassOptions = () => {
+    if (level === "Calistung") {
+      return ["4 Tahun", "5 Tahun", "6 Tahun", "7 Tahun"].map((age) => (
+        <option key={age} value={age}>
+          {age}
+        </option>
+      ));
+    } else if (level === "SD") {
+      return [
+        "Kelas 1",
+        "Kelas 2",
+        "Kelas 3",
+        "Kelas 4",
+        "Kelas 5",
+        "Kelas 6",
+      ].map((cls) => (
+        <option key={cls} value={cls}>
+          {cls}
+        </option>
+      ));
+    } else if (level === "SMP") {
+      return ["Kelas 7", "Kelas 8", "Kelas 9"].map((cls) => (
+        <option key={cls} value={cls}>
+          {cls}
+        </option>
+      ));
+    }
+    return null;
+  };
+
+  const renderSubjectOptions = () => {
+    if (level === "SD") {
+      return ["Matematika", "Bahasa Inggris"].map((sub) => (
+        <option key={sub} value={sub}>
+          {sub}
+        </option>
+      ));
+    } else if (level === "SMP") {
+      return ["Matematika", "IPA", "Bahasa Inggris"].map((sub) => (
+        <option key={sub} value={sub}>
+          {sub}
+        </option>
+      ));
+    }
+    return null;
   };
 
   if (!isVisible) return null;
@@ -238,7 +304,7 @@ const SakaLocationPopup = () => {
           />
 
           <div
-            className={`fixed inset-x-0 bottom-0 z-[100] p-4 md:inset-auto md:left-6 md:bottom-6 md:p-0 md:w-[380px] transition-all duration-700 ${
+            className={`fixed inset-x-0 bottom-0 z-[100] p-4 md:inset-auto md:left-6 md:bottom-6 md:p-0 md:w-[380px] transition-all duration-1000 cubic-bezier(0.4, 0, 0.2, 1) ${
               isAnimateOut
                 ? "translate-y-full opacity-0"
                 : "translate-y-0 opacity-100 animate-in slide-in-from-bottom-full"
@@ -258,7 +324,8 @@ const SakaLocationPopup = () => {
 
               <div className="h-2 bg-gradient-to-r from-[#0066FF] via-[#00CC99] to-[#0066FF]" />
 
-              <div className="p-8">
+              <div className="p-8 max-h-[85vh] overflow-y-auto hidden-scrollbar">
+                {/* STEP CITY */}
                 {step === "city" && (
                   <div className="space-y-6">
                     <div className="text-center md:text-left">
@@ -299,6 +366,7 @@ const SakaLocationPopup = () => {
                   </div>
                 )}
 
+                {/* STEP CHECK */}
                 {step === "check" && (
                   <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-500">
                     <button
@@ -319,9 +387,6 @@ const SakaLocationPopup = () => {
                       <h2 className="text-xl font-extrabold text-slate-800 tracking-tight leading-tight">
                         Kecamatan di {selectedCity}
                       </h2>
-                      <p className="text-[11px] text-slate-400 mt-1 italic">
-                        *Kami tidak menyimpan data pribadi Anda pada tahap ini.
-                      </p>
                     </div>
 
                     <div className="space-y-4">
@@ -344,13 +409,11 @@ const SakaLocationPopup = () => {
                               {selectedDistrict
                                 ? selectedDistrict.name
                                 : loadingDistricts
-                                  ? "Memuat kecamatan..."
+                                  ? "Memuat..."
                                   : "Pilih Kecamatan..."}
                             </span>
                             <ChevronDown
-                              className={`w-4 h-4 text-slate-400 transition-transform ${
-                                isOpenDropdown ? "rotate-180" : ""
-                              }`}
+                              className={`w-4 h-4 text-slate-400 transition-transform ${isOpenDropdown ? "rotate-180" : ""}`}
                             />
                           </div>
 
@@ -361,7 +424,7 @@ const SakaLocationPopup = () => {
                                   <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-400" />
                                   <input
                                     type="text"
-                                    placeholder="Cari..."
+                                    placeholder="Ketik nama kecamatan..."
                                     className="w-full bg-slate-50 py-2 pl-9 pr-4 text-xs outline-none rounded-lg focus:bg-white focus:ring-1 focus:ring-blue-100 transition-all"
                                     value={searchTerm}
                                     onChange={(e) =>
@@ -392,7 +455,7 @@ const SakaLocationPopup = () => {
                                     </div>
                                   ))
                                 ) : (
-                                  <div className="p-4 text-center text-xs text-slate-400 italic">
+                                  <div className="p-4 text-center text-xs text-slate-400 font-medium italic">
                                     Lokasi tidak ditemukan...
                                   </div>
                                 )}
@@ -411,12 +474,12 @@ const SakaLocationPopup = () => {
                             <button
                               key={item}
                               type="button"
-                              onClick={() => setLevel(item)}
-                              className={`py-2.5 text-xs font-bold rounded-xl border transition-all ${
-                                level === item
-                                  ? "bg-[#0066FF] text-white border-[#0066FF] shadow-md shadow-blue-100"
-                                  : "bg-white text-slate-600 border-slate-200 hover:border-[#0066FF]"
-                              }`}
+                              onClick={() => {
+                                setLevel(item);
+                                setSelectedClass("");
+                                setSelectedSubject("");
+                              }}
+                              className={`py-2.5 text-xs font-bold rounded-xl border transition-all ${level === item ? "bg-[#0066FF] text-white border-[#0066FF] shadow-md shadow-blue-100" : "bg-white text-slate-600 border-slate-200 hover:border-[#0066FF]"}`}
                             >
                               {item}
                             </button>
@@ -444,60 +507,105 @@ const SakaLocationPopup = () => {
                   </div>
                 )}
 
+                {/* STEP AVAILABLE */}
                 {step === "available" && (
-                  <div className="text-center space-y-6 py-2 animate-in zoom-in-95 duration-500">
-                    <div className="w-20 h-20 bg-emerald-50 rounded-[2.5rem] flex items-center justify-center mx-auto text-[#00CC99] animate-pulse">
-                      <CheckCircle2 className="w-12 h-12" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold text-slate-800">
+                  <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-500">
+                    <div className="text-center md:text-left border-b border-slate-100 pb-3">
+                      <h3 className="text-lg font-bold text-slate-800 flex items-center justify-center md:justify-start gap-2">
+                        <CheckCircle2 className="w-5 h-5 text-[#00CC99]" />{" "}
                         Tutor Tersedia!
                       </h3>
-                      <p className="text-sm text-slate-500">
-                        Yay🎉 Tutor tersedia di wilayah{" "}
-                        <span className="font-bold text-[#0066FF]">
-                          {selectedDistrict?.name}
-                        </span>
+                      <p className="text-xs text-slate-500 mt-1">
+                        Silakan lengkapi data untuk Daftar Cepat
                       </p>
                     </div>
 
-                    <div className="space-y-3 pt-2 text-left">
-                      <div className="relative">
-                        <span className="absolute left-4 top-3.5 text-sm font-bold text-slate-400">
-                          +62
-                        </span>
+                    <div className="space-y-3.5 text-left">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                          Nama Siswa
+                        </label>
                         <input
-                          type="tel"
-                          placeholder="812xxxxxxx"
-                          value={waNumber}
-                          onChange={(e) =>
-                            setWaNumber(e.target.value.replace(/[^0-9]/g, ""))
-                          }
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3.5 pl-14 pr-4 text-sm outline-none focus:ring-4 focus:ring-emerald-50 focus:border-[#00CC99] transition-all"
+                          type="text"
+                          placeholder="Masukkan nama calon siswa"
+                          value={studentName}
+                          onChange={(e) => setStudentName(e.target.value)}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-blue-100 focus:border-[#0066FF] transition-all"
                         />
-                        <p className="text-sm text-slate-500 mt-2">
-                          Masukkan nomor WA aktif untuk dihubungi admin
-                        </p>
                       </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                          Alamat Rumah
+                        </label>
+                        <textarea
+                          rows={2}
+                          placeholder="Nama jalan, RT/RW, nomor rumah"
+                          value={studentAddress}
+                          onChange={(e) => setStudentAddress(e.target.value)}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-blue-100 focus:border-[#0066FF] transition-all resize-none"
+                        />
+                      </div>
+
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                          {level === "Calistung"
+                            ? "Pilih Umur Anak"
+                            : `Pilih Kelas Saat Ini (${level})`}
+                        </label>
+                        <div className="relative">
+                          <select
+                            value={selectedClass}
+                            onChange={(e) => setSelectedClass(e.target.value)}
+                            className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-blue-100 focus:border-[#0066FF] appearance-none transition-all cursor-pointer"
+                          >
+                            <option value="">-- Pilih Opsi --</option>
+                            {renderClassOptions()}
+                          </select>
+                          <ChevronDown className="absolute right-4 top-3.5 w-4 h-4 text-slate-400 pointer-events-none" />
+                        </div>
+                      </div>
+
+                      {level !== "Calistung" && (
+                        <div className="space-y-1 animate-in fade-in duration-300">
+                          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">
+                            Mapel Yang Ingin Diikuti
+                          </label>
+                          <div className="relative">
+                            <select
+                              value={selectedSubject}
+                              onChange={(e) =>
+                                setSelectedSubject(e.target.value)
+                              }
+                              className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2.5 px-4 text-sm outline-none focus:ring-2 focus:ring-blue-100 focus:border-[#0066FF] appearance-none transition-all cursor-pointer"
+                            >
+                              <option value="">
+                                -- Pilih Mata Pelajaran --
+                              </option>
+                              {renderSubjectOptions()}
+                            </select>
+                            <ChevronDown className="absolute right-4 top-3.5 w-4 h-4 text-slate-400 pointer-events-none" />
+                          </div>
+                        </div>
+                      )}
 
                       <button
                         onClick={handleSubmitRequest}
-                        disabled={loading}
-                        className="w-full bg-[#25D366] hover:bg-[#20ba5a] disabled:bg-slate-300 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-100"
+                        className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-100 mt-2 active:scale-95"
                       >
                         <MessageCircle className="w-5 h-5" />
-                        {loading ? "Mengirim..." : "Kirim"}
+                        Daftar Cepat
                       </button>
                     </div>
                   </div>
                 )}
 
+                {/* STEP UNAVAILABLE */}
                 {step === "unavailable" && (
                   <div className="text-center space-y-6 py-2 animate-in zoom-in-95 duration-500">
                     <div className="w-20 h-20 bg-orange-50 rounded-[2.5rem] flex items-center justify-center mx-auto text-orange-500">
                       <AlertCircle className="w-12 h-12" />
                     </div>
-
                     <div className="space-y-2">
                       <h3 className="text-xl font-bold text-slate-800">
                         Belum Tersedia
@@ -510,7 +618,6 @@ const SakaLocationPopup = () => {
                         tutor belum tersedia.
                       </p>
                     </div>
-
                     <div className="flex flex-col gap-3 pt-2">
                       <button
                         onClick={() => {
@@ -519,13 +626,11 @@ const SakaLocationPopup = () => {
                           setSelectedDistrict(null);
                           setSearchTerm("");
                           setLevel("");
-                          setIsOpenDropdown(false);
                         }}
                         className="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 font-bold py-4 rounded-2xl transition-all active:scale-95 border border-slate-200"
                       >
                         Cek Wilayah Lain
                       </button>
-
                       <div className="relative">
                         <div
                           className="absolute inset-0 flex items-center"
@@ -539,7 +644,6 @@ const SakaLocationPopup = () => {
                           </span>
                         </div>
                       </div>
-
                       <button
                         onClick={() => {
                           const adminNumber = "62895357409769";
@@ -561,36 +665,6 @@ const SakaLocationPopup = () => {
             </div>
           </div>
         </>
-      )}
-
-      {showSuccess && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/50 px-4 animate-in fade-in duration-300">
-          <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl animate-in zoom-in duration-300">
-            <div className="mb-6 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                <CheckCircle2 className="h-8 w-8 text-green-600" />
-              </div>
-            </div>
-
-            <h3 className="mb-3 text-center text-2xl font-bold text-slate-800">
-              Request Terkirim 🎉
-            </h3>
-
-            <p className="mb-6 text-center text-slate-500">
-              Admin akan segera menghubungi terkait ketersediaan tutor.
-            </p>
-
-            <button
-              onClick={() => {
-                setShowSuccess(false);
-                handleMinimize();
-              }}
-              className="w-full rounded-xl bg-[#00CC99] px-6 py-3 font-medium text-white transition-all hover:bg-[#00B88A]"
-            >
-              OK
-            </button>
-          </div>
-        </div>
       )}
     </>
   );
