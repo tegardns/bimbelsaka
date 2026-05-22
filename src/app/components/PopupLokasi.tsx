@@ -26,7 +26,7 @@ type District = {
 
 const SakaLocationPopup = () => {
   const [step, setStep] = useState<
-    "city" | "check" | "available" | "unavailable"
+    "city" | "check" | "available" | "unavailable" | "success"
   >("city");
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimateOut, setIsAnimateOut] = useState(false);
@@ -175,7 +175,6 @@ const SakaLocationPopup = () => {
 
     try {
       setLoading(true);
-
       const response = await fetch(`${API_BASE_URL}/api/quick-registration`, {
         method: "POST",
         headers: {
@@ -184,14 +183,10 @@ const SakaLocationPopup = () => {
         body: JSON.stringify({
           city: selectedCity,
           district: selectedDistrict?.name,
-
           level,
-
           studentName,
           studentAddress,
-
           classOrAge: selectedClass,
-
           subject: level === "Calistung" ? null : selectedSubject,
         }),
       });
@@ -589,12 +584,14 @@ const SakaLocationPopup = () => {
                         </div>
                       )}
 
+                      {/* Kondisional tulisan tombol jika state sedang loading */}
                       <button
                         onClick={handleSubmitRequest}
-                        className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-100 mt-2 active:scale-95"
+                        disabled={loading}
+                        className="w-full bg-[#25D366] hover:bg-[#20ba5a] disabled:bg-slate-300 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-100 mt-2 active:scale-95"
                       >
                         <MessageCircle className="w-5 h-5" />
-                        Daftar Cepat
+                        {loading ? "Mengirim..." : "Daftar Cepat"}
                       </button>
                     </div>
                   </div>
