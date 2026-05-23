@@ -9,6 +9,7 @@ import {
   ChevronDown,
   ArrowLeft,
 } from "lucide-react";
+import { track } from "@vercel/analytics";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -54,7 +55,12 @@ const SakaLocationPopup = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 700);
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+
+      track("popup_location_open");
+    }, 700);
+
     return () => clearTimeout(timer);
   }, []);
 
@@ -134,8 +140,17 @@ const SakaLocationPopup = () => {
 
   const handleCheckLocation = async () => {
     if (!selectedCity || !selectedDistrict || !level) return;
+
+    // TRACK EVENT
+    track("cek_lokasi", {
+      city: selectedCity,
+      district: selectedDistrict.name,
+      level,
+    });
+
     try {
       setLoading(true);
+
       const response = await fetch(`${API_BASE_URL}/api/coverage/check`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -145,17 +160,41 @@ const SakaLocationPopup = () => {
           level,
         }),
       });
+
       const result = await response.json();
+
       if (!response.ok) {
         throw new Error(result?.message || "Gagal cek lokasi");
       }
+
+      // TRACK AVAILABLE
       if (result.data?.available) {
+        track("location_available", {
+          city: selectedCity,
+          district: selectedDistrict.name,
+          level,
+        });
+
         setStep("available");
       } else {
+        // TRACK UNAVAILABLE
+        track("location_unavailable", {
+          city: selectedCity,
+          district: selectedDistrict.name,
+          level,
+        });
+
         setStep("unavailable");
       }
     } catch (err) {
       console.error(err);
+
+      track("location_check_error", {
+        city: selectedCity,
+        district: selectedDistrict?.name || "",
+        level,
+      });
+
       alert("Gagal cek lokasi");
     } finally {
       setLoading(false);
@@ -175,6 +214,16 @@ const SakaLocationPopup = () => {
 
     try {
       setLoading(true);
+
+      // TRACK SUBMIT
+      track("quick_register_submit", {
+        city: selectedCity || "",
+        district: selectedDistrict?.name || "",
+        level,
+        class: selectedClass,
+        subject: level === "Calistung" ? "Calistung" : selectedSubject,
+      });
+
       const response = await fetch(`${API_BASE_URL}/api/quick-registration`, {
         method: "POST",
         headers: {
@@ -196,6 +245,13 @@ const SakaLocationPopup = () => {
       if (!response.ok) {
         throw new Error(result?.message || "Gagal menyimpan data");
       }
+
+      // TRACK SUCCESS
+      track("quick_register_success", {
+        city: selectedCity || "",
+        district: selectedDistrict?.name || "",
+        level,
+      });
 
       const adminNumber = "62895357409769";
 
@@ -221,6 +277,13 @@ const SakaLocationPopup = () => {
       handleMinimize();
     } catch (err) {
       console.error(err);
+
+      track("quick_register_error", {
+        city: selectedCity || "",
+        district: selectedDistrict?.name || "",
+        level,
+      });
+
       alert("Gagal menyimpan data");
     } finally {
       setLoading(false);
