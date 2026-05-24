@@ -32,7 +32,7 @@ export default defineConfig({
         background_color: "#0d1117",
         display: "standalone",
         orientation: "portrait",
-        scope: "/",
+        scope: "/tanya-pr",
         start_url: "/tanya-pr",
         icons: [
           {
