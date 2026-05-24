@@ -60,6 +60,8 @@ export function AISakaPage() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showPwaBanner, setShowPwaBanner] = useState(false);
 
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -270,12 +272,16 @@ export function AISakaPage() {
       {/* ── Header ── */}
       <header className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-white/5">
         {/* Kiri: back button (Langsung memunculkan popup konfirmasi keluar) */}
-        <button
-          onClick={() => setShowExitConfirm(true)}
-          className="flex items-center gap-2 text-white/50 hover:text-white/90 transition-colors p-2 -ml-2 rounded-xl hover:bg-white/5"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
+        {!isStandalone ? (
+          <button
+            onClick={() => setShowExitConfirm(true)}
+            className="flex items-center gap-2 text-white/50 hover:text-white/90 transition-colors p-2 -ml-2 rounded-xl hover:bg-white/5"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+        ) : (
+          <div className="w-9" /> // placeholder biar title tetap di tengah
+        )}
 
         {/* Tengah: Title */}
         <div className="flex items-center gap-2">
