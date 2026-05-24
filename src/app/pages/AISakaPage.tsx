@@ -284,7 +284,7 @@ export function AISakaPage() {
             <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-blue-400 rounded-full animate-ping opacity-75" />
           </div>
           <span className="text-white font-medium tracking-wide text-lg">
-            <em>Ai Saka</em>
+            <em>Saka Ai</em>
           </span>
         </div>
 
@@ -323,7 +323,7 @@ export function AISakaPage() {
                 Akses Lebih Cepat & Ringan
               </p>
               <p className="text-white/40 text-[10px] font-light">
-                Tambahkan Ai Saka ke layar utama kamu
+                Tambahkan Saka Ai ke layar utama kamu
               </p>
             </div>
           </div>
