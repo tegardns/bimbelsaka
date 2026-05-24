@@ -31,6 +31,13 @@ interface Message {
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+// Deteksi iOS
+const isIOS = () =>
+  /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+
+const isInStandaloneMode = () =>
+  window.matchMedia("(display-mode: standalone)").matches;
+
 // ─── Blink cursor component ───────────────────────────────────────────────────
 const BlinkCursor = () => (
   <span className="inline-block w-[3px] h-5 bg-blue-400 ml-1 align-middle animate-pulse rounded-full" />
@@ -61,6 +68,9 @@ export function AISakaPage() {
   const [showPwaBanner, setShowPwaBanner] = useState(false);
 
   const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+  const [showIOSBanner, setShowIOSBanner] = useState(
+    isIOS() && !isInStandaloneMode(),
+  );
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -344,6 +354,44 @@ export function AISakaPage() {
             <button
               onClick={handleDismissPwaBanner}
               className="p-1.5 text-white/30 hover:text-white/70 transition-colors rounded-lg hover:bg-white/5"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── iOS Install Banner ── */}
+      {showIOSBanner && (
+        <div className="relative z-20 px-4 py-3 bg-gradient-to-r from-blue-600/20 to-cyan-500/10 border-b border-blue-500/20 backdrop-blur-md animate-in slide-in-from-top duration-300">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <img
+                  src={LogoAISaka}
+                  alt="Saka Logo"
+                  className="w-5 h-5 object-contain"
+                />
+              </div>
+              <div className="text-left">
+                <p className="text-white/90 text-xs font-medium">
+                  Tambahkan ke Homescreen
+                </p>
+                <p className="text-white/40 text-[10px] font-light leading-relaxed mt-0.5">
+                  Tap tombol{" "}
+                  <span className="inline-flex items-center gap-0.5 text-white/60 font-medium">
+                    Bagikan
+                  </span>{" "}
+                  di Safari, lalu pilih{" "}
+                  <span className="text-white/60 font-medium">
+                    "Tambahkan ke Layar Utama"
+                  </span>
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowIOSBanner(false)}
+              className="p-1.5 text-white/30 hover:text-white/70 transition-colors rounded-lg hover:bg-white/5 flex-shrink-0"
             >
               <X className="w-3.5 h-3.5" />
             </button>
