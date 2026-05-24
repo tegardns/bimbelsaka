@@ -1,6 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Trash2, Camera, Send, X, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  Trash2,
+  Camera,
+  Send,
+  X,
+  Sparkles,
+  Plus,
+} from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -48,9 +56,40 @@ export function AISakaPage() {
   const [hasInteracted, setHasInteracted] = useState(false);
   const [showExitConfirm, setShowExitConfirm] = useState(false);
 
+  // State untuk PWA Installer Prompt
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showPwaBanner, setShowPwaBanner] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Listener untuk mendeteksi apakah aplikasi bisa diinstal (PWA belum terinstal)
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      // Cek apakah user pernah menutup banner ini sebelumnya di session ini
+      const isBannerDismissed = sessionStorage.getItem("pwa_banner_dismissed");
+      if (!isBannerDismissed) {
+        setShowPwaBanner(true);
+      }
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    // Jika masuk dalam mode standalone (sudah terinstal), pastikan banner tersembunyi
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+      setShowPwaBanner(false);
+    }
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt,
+      );
+    };
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -63,6 +102,21 @@ export function AISakaPage() {
         Math.min(textareaRef.current.scrollHeight, 140) + "px";
     }
   }, [input]);
+
+  const handlePwaInstall = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === "accepted") {
+      setDeferredPrompt(null);
+      setShowPwaBanner(false);
+    }
+  };
+
+  const handleDismissPwaBanner = () => {
+    setShowPwaBanner(false);
+    sessionStorage.setItem("pwa_banner_dismissed", "true");
+  };
 
   const handleSubjectChange = (s: Subject) => {
     if (s === subject) return;
@@ -252,6 +306,44 @@ export function AISakaPage() {
           <Trash2 className="w-4.5 h-4.5" />
         </button>
       </header>
+
+      {/* ── PWA Notification Banner (Muncul di atas jika belum install) ── */}
+      {showPwaBanner && (
+        <div className="relative z-20 px-4 py-2 bg-gradient-to-r from-blue-600/20 to-cyan-500/10 border-b border-blue-500/20 backdrop-blur-md flex items-center justify-between animate-in slide-in-from-top duration-300">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+              <img
+                src={LogoAISaka}
+                alt="Saka Logo"
+                className="w-5 h-5 object-contain"
+              />
+            </div>
+            <div className="text-left">
+              <p className="text-white/90 text-xs font-medium">
+                Akses Lebih Cepat & Ringan
+              </p>
+              <p className="text-white/40 text-[10px] font-light">
+                Tambahkan Ai Saka ke layar utama kamu
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePwaInstall}
+              className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 hover:bg-blue-400 text-white rounded-xl text-xs font-medium transition-all shadow-md shadow-blue-500/20 active:scale-95"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              Tambah
+            </button>
+            <button
+              onClick={handleDismissPwaBanner}
+              className="p-1.5 text-white/30 hover:text-white/70 transition-colors rounded-lg hover:bg-white/5"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── Subject Toggle ── */}
       <div className="relative z-10 flex justify-center px-4 py-3">
