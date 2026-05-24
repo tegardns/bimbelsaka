@@ -67,7 +67,9 @@ export function AISakaPage() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showPwaBanner, setShowPwaBanner] = useState(false);
 
-  const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+  const isStandalone =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (isIOS() && (navigator as any).standalone === true);
   const [showIOSBanner, setShowIOSBanner] = useState(
     isIOS() && !isInStandaloneMode(),
   );
