@@ -10,6 +10,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { track } from "@vercel/analytics";
+import { trackEvent } from "../../lib/analytics";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -142,11 +143,7 @@ const SakaLocationPopup = () => {
     if (!selectedCity || !selectedDistrict || !level) return;
 
     // TRACK EVENT
-    track("cek_lokasi", {
-      city: selectedCity,
-      district: selectedDistrict.name,
-      level,
-    });
+    trackEvent("klik_cek_lokasi", "popup_lokasi", selectedDistrict?.name);
 
     try {
       setLoading(true);

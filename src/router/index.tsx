@@ -7,6 +7,8 @@ import {
   useLocation,
 } from "react-router-dom";
 
+import { trackPageView } from "../lib/analytics";
+
 import { PublicLayout } from "../app/components/layout/PublicLayout";
 
 import { HomePage } from "../app/pages/HomePage";
@@ -34,10 +36,19 @@ function ScrollToTop() {
   return null;
 }
 
+function PageTracker() {
+  const location = useLocation();
+  useEffect(() => {
+    trackPageView(location.pathname);
+  }, [location]);
+  return null;
+}
+
 export function AppRouter() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <PageTracker />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
