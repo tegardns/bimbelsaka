@@ -339,7 +339,7 @@ export function AISakaPage() {
               className="flex items-center gap-1 px-3 py-1.5 bg-blue-500 hover:bg-blue-400 text-white rounded-xl text-xs font-medium transition-all shadow-md shadow-blue-500/20 active:scale-95"
             >
               <Plus className="w-3.5 h-3.5" />
-              Tambah
+              Install
             </button>
             <button
               onClick={handleDismissPwaBanner}
