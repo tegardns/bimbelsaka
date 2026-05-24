@@ -290,7 +290,7 @@ export function AISakaPage() {
             <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-blue-400 rounded-full animate-ping opacity-75" />
           </div>
           <span className="text-white font-medium tracking-wide text-lg">
-            <em>Saka Ai</em>
+            <em>SakaAi</em>
           </span>
         </div>
 
