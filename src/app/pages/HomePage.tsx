@@ -1,3 +1,5 @@
+import { useState, useRef } from "react";
+import { MapPin } from "lucide-react";
 import { Hero } from "../components/Hero";
 import { Services } from "../components/Services";
 import { Methods } from "../components/Methods";
@@ -7,82 +9,75 @@ import { HowToRegister } from "../components/HowToRegister";
 import { FAQ } from "../components/FAQ";
 import { Contact } from "../components/Contact";
 import SakaLocationPopup from "../components/PopupLokasi";
+import AISakaButton from "../components/AISaka/AISakaButton";
 
-// Import logo WhatsApp
-import WhatsappLogo from "../../../assets/whatsapp.svg";
+// Impor logo WhatsApp dari folder assets Anda
+import LogoWhatsApp from "../../../assets/whatsapp.svg";
 
 export function HomePage() {
-  const whatsappNumber = "62895357409769";
-  const whatsappMessage =
-    "Halo Admin Bimbel Saka, saya ingin bertanya mengenai layanan les.";
+  const [lokasiClosed, setLokasiClosed] = useState(false);
+  const openLokasiRef = useRef<(() => void) | null>(null);
 
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+  const WHATSAPP_LINK =
+    "https://wa.me/62895357409769?text=Halo%20Kak%20Melly,%20saya%20mau%20tanya%20informasi%20pendaftaran...";
 
   return (
     <>
-      <SakaLocationPopup />
       <Hero />
       <Services />
       <Methods />
       <WhyChooseUs />
-      <Pricing />
+      <div id="harga" className="scroll-mt-20">
+        <Pricing />
+      </div>
       <HowToRegister />
       <FAQ />
       <Contact />
 
-      {/* Floating WhatsApp Button */}
-      <a
-        href={whatsappUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        // Pakai class unik 'wa-float' supaya tidak tabrakan dengan navbar
-        className="wa-float fixed bottom-6 right-6 z-50 flex h-14 w-14 md:h-14 md:w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition-transform duration-300 hover:scale-110 active:scale-95 focus:outline-none"
-      >
-        <img
-          src={WhatsappLogo}
-          alt="WhatsApp"
-          className="h-8 w-8 md:h-8 md:w-8 object-contain"
-        />
+      {/* Popup Lokasi */}
+      <SakaLocationPopup
+        onClose={() => setLokasiClosed(true)}
+        onRequestOpen={(fn) => {
+          openLokasiRef.current = fn;
+        }}
+      />
 
-        <style>{`
-          /* Animasi khusus hanya untuk elemen dengan class wa-float */
-          .wa-float:hover::after {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background-color: rgba(37, 211, 102, 0.4);
-            animation: pulsate-wa 1.2s infinite;
-          }
+      {/* Floating buttons — Muncul rata kanan setelah popup lokasi ditutup */}
+      {lokasiClosed && (
+        <div className="fixed bottom-6 right-6 z-[108] flex flex-col items-end gap-3.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+          {/* 1. Button Lokasi */}
+          <button
+            onClick={() => {
+              setLokasiClosed(false);
+              openLokasiRef.current?.();
+            }}
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-2xl border border-slate-200 transition-all hover:scale-110 hover:border-[#0066FF] animate-in fade-in zoom-in duration-500"
+            aria-label="Cek ketersediaan tutor"
+            title="Cek Ketersediaan Tutor"
+          >
+            <MapPin className="h-6 w-6 text-white" />
+          </button>
 
-          @keyframes pulsate-wa {
-            0% {
-              transform: scale(1);
-              opacity: 1;
-            }
-            100% {
-              transform: scale(1.5);
-              opacity: 0;
-            }
-          }
+          {/* 2. Button WhatsApp dengan Logo dari Assets */}
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-2xl transition-all hover:scale-110 hover:bg-[#20ba5a] animate-in fade-in zoom-in duration-500"
+            aria-label="Hubungi Admin via WhatsApp"
+            title="Hubungi Admin"
+          >
+            <img
+              src={LogoWhatsApp}
+              alt="WhatsApp"
+              className="h-7 w-7 object-contain select-none"
+            />
+          </a>
 
-          /* Animasi goyang tipis saat idle */
-          .wa-float {
-            animation: floating-wa 3s ease-in-out infinite;
-          }
-
-          @keyframes floating-wa {
-            0%,
-            100% {
-              transform: translateY(0);
-            }
-            50% {
-              transform: translateY(-5px);
-            }
-          }
-        `}</style>
-      </a>
+          {/* 3. Button AI / Tanya PR */}
+          <AISakaButton />
+        </div>
+      )}
     </>
   );
 }

@@ -26,7 +26,13 @@ type District = {
   available: boolean;
 };
 
-const SakaLocationPopup = () => {
+const SakaLocationPopup = ({
+  onClose,
+  onRequestOpen,
+}: {
+  onClose?: () => void;
+  onRequestOpen?: (openFn: () => void) => void;
+}) => {
   const [step, setStep] = useState<
     "city" | "check" | "available" | "unavailable" | "success"
   >("city");
@@ -58,7 +64,6 @@ const SakaLocationPopup = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-
       track("popup_location_open");
     }, 700);
 
@@ -81,19 +86,26 @@ const SakaLocationPopup = () => {
     setLoadingDistricts(false);
   };
 
+  const handleOpen = () => {
+    resetPopupState();
+    setIsMinimized(false);
+    setIsAnimateOut(false);
+    setIsVisible(true);
+  };
+
+  // Expose handleOpen ke parent (HomePage) lewat onRequestOpen
+  useEffect(() => {
+    onRequestOpen?.(handleOpen);
+  }, []);
+
   const handleMinimize = () => {
     setIsAnimateOut(true);
     setTimeout(() => {
       resetPopupState();
       setIsMinimized(true);
       setIsAnimateOut(false);
+      onClose?.();
     }, 400);
-  };
-
-  const handleOpen = () => {
-    resetPopupState();
-    setIsMinimized(false);
-    setIsAnimateOut(false);
   };
 
   useEffect(() => {
@@ -142,7 +154,6 @@ const SakaLocationPopup = () => {
   const handleCheckLocation = async () => {
     if (!selectedCity || !selectedDistrict || !level) return;
 
-    // TRACK EVENT
     trackEvent("klik_cek_lokasi", "popup_lokasi", selectedDistrict?.name);
 
     try {
@@ -164,34 +175,28 @@ const SakaLocationPopup = () => {
         throw new Error(result?.message || "Gagal cek lokasi");
       }
 
-      // TRACK AVAILABLE
       if (result.data?.available) {
         track("location_available", {
           city: selectedCity,
           district: selectedDistrict.name,
           level,
         });
-
         setStep("available");
       } else {
-        // TRACK UNAVAILABLE
         track("location_unavailable", {
           city: selectedCity,
           district: selectedDistrict.name,
           level,
         });
-
         setStep("unavailable");
       }
     } catch (err) {
       console.error(err);
-
       track("location_check_error", {
         city: selectedCity,
         district: selectedDistrict?.name || "",
         level,
       });
-
       alert("Gagal cek lokasi");
     } finally {
       setLoading(false);
@@ -212,7 +217,6 @@ const SakaLocationPopup = () => {
     try {
       setLoading(true);
 
-      // TRACK SUBMIT
       track("quick_register_submit", {
         city: selectedCity || "",
         district: selectedDistrict?.name || "",
@@ -223,9 +227,7 @@ const SakaLocationPopup = () => {
 
       const response = await fetch(`${API_BASE_URL}/api/quick-registration`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           city: selectedCity,
           district: selectedDistrict?.name,
@@ -243,7 +245,6 @@ const SakaLocationPopup = () => {
         throw new Error(result?.message || "Gagal menyimpan data");
       }
 
-      // TRACK SUCCESS
       track("quick_register_success", {
         city: selectedCity || "",
         district: selectedDistrict?.name || "",
@@ -338,16 +339,7 @@ const SakaLocationPopup = () => {
 
   return (
     <>
-      {isMinimized && (
-        <button
-          onClick={handleOpen}
-          className="fixed bottom-24 right-6 z-[110] flex h-14 w-14 items-center justify-center rounded-full bg-primary shadow-2xl border border-slate-200 transition-all hover:scale-110 hover:border-[#0066FF] animate-in fade-in zoom-in duration-500"
-          aria-label="Buka cek lokasi"
-          title="Cek Ketersediaan Tutor"
-        >
-          <MapPin className="h-6 w-6 !text-white" />
-        </button>
-      )}
+      {/* Tombol minimized DIHAPUS — dihandle oleh HomePage */}
 
       {!isMinimized && (
         <>
@@ -644,7 +636,6 @@ const SakaLocationPopup = () => {
                         </div>
                       )}
 
-                      {/* Kondisional tulisan tombol jika state sedang loading */}
                       <button
                         onClick={handleSubmitRequest}
                         disabled={loading}

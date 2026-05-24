@@ -16,6 +16,7 @@ import { RegistrationPage } from "../app/pages/RegistrationPage";
 import { CareerPage } from "../app/pages/CareerPage";
 import { ArticlesPage } from "../app/pages/ArticlesPage";
 import { ArticleDetailPage } from "../app/pages/ArticleDetailPage";
+import { AISakaPage } from "../app/pages/AISakaPage";
 
 import { LoginAdmin } from "../app/pages/admin/LoginAdmin";
 import { CandidatesPage } from "../app/pages/admin/CandidatesPage";
@@ -27,15 +28,20 @@ import { CMSLayout } from "../app/components/admin/CMSLayout";
 import { ProtectedRoute } from "../app/components/ProtectedRoute";
 
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  // 1. Tambahkan 'hash' di sini
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    // 2. Bungkus dengan kondisi: Jika tidak ada hash, baru scroll ke atas
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]); // 3. Tambahkan 'hash' ke dalam dependency array di sini
 
   return null;
 }
 
+// ← PERBAIKAN BUG: PageTracker dipindah ke dalam komponen
 function PageTracker() {
   const location = useLocation();
   useEffect(() => {
@@ -57,6 +63,8 @@ export function AppRouter() {
           <Route path="/artikel" element={<ArticlesPage />} />
           <Route path="/artikel/:id" element={<ArticleDetailPage />} />
         </Route>
+
+        <Route path="/tanya-pr" element={<AISakaPage />} />
 
         <Route path="/loginadmin" element={<LoginAdmin />} />
 

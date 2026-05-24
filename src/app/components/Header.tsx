@@ -1,12 +1,13 @@
 import { Menu } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logoSaka from "../../imports/bim.png";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +18,21 @@ export function Header() {
   }, []);
 
   const isActive = (path: string) => location.pathname === path;
+
+  // Fungsi penangan klik Menu Harga
+  const handleHargaClick = (e: React.MouseEvent) => {
+    setIsMenuOpen(false);
+
+    if (location.pathname === "/") {
+      e.preventDefault();
+      const element = document.getElementById("harga");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate("/#harga");
+    }
+  };
 
   return (
     <header
@@ -63,6 +79,7 @@ export function Header() {
             />
           </Link>
 
+          {/* Navigasi Desktop */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
               to="/"
@@ -83,6 +100,17 @@ export function Header() {
               }`}
             >
               Karir
+            </Link>
+            <Link
+              to="/#harga"
+              onClick={handleHargaClick}
+              className={`text-sm font-medium transition-colors ${
+                location.hash === "#harga"
+                  ? "!text-white"
+                  : "!text-white/80 hover:!text-white"
+              }`}
+            >
+              Harga
             </Link>
             <Link
               to="/artikel"
@@ -110,6 +138,7 @@ export function Header() {
           </button>
         </div>
 
+        {/* Navigasi Mobile */}
         {isMenuOpen && (
           <div className="md:hidden absolute left-0 right-0 top-full border-t border-white/10 bg-primary/80 backdrop-blur-xl">
             {/* Pattern layers */}
@@ -155,6 +184,19 @@ export function Header() {
                 >
                   Karir
                 </Link>
+
+                <Link
+                  to="/#harga"
+                  onClick={handleHargaClick}
+                  className={`text-left py-2 transition-colors ${
+                    location.hash === "#harga"
+                      ? "!text-white"
+                      : "!text-white/90 hover:!text-white"
+                  }`}
+                >
+                  Harga
+                </Link>
+
                 <Link
                   to="/artikel"
                   onClick={() => setIsMenuOpen(false)}
