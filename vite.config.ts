@@ -26,14 +26,14 @@ export default defineConfig({
       includeAssets: ["favicon.ico", "apple-touch-icon.png"],
       manifest: {
         name: "Bimbel Saka",
-        short_name: "Saka",
+        short_name: "Saka AI",
         description: "Les Privat Purwokerto & Purbalingga",
         theme_color: "#0066FF",
         background_color: "#0d1117",
         display: "standalone",
         orientation: "portrait",
         scope: "/",
-        start_url: "/",
+        start_url: "/tanya-pr",
         icons: [
           {
             src: "pwa-192x192.png",
