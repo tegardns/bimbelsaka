@@ -491,7 +491,7 @@ export function TestLogikaPage() {
               </span>
               <span className="h-4 w-px bg-slate-200" />
               <span className="flex items-center gap-1.5 font-semibold">
-                <span className="text-lg">⏱️</span> 1 Menit
+                <span className="text-lg">⏱️</span> 60 Detik
               </span>
               <span className="h-4 w-px bg-slate-200" />
               <span className="flex items-center gap-1.5 font-semibold">
@@ -589,7 +589,7 @@ export function TestLogikaPage() {
               <div key="step-level" className="page-enter space-y-5">
                 <div className="stagger-1 space-y-1">
                   <h2 className="text-2xl font-black text-slate-900">
-                    Pilih levelmu, {playerName}! 🎮
+                    Pilih levelmu, {playerName}!
                   </h2>
                   <p className="text-sm text-slate-400">
                     Sesuaikan dengan kelasmu sekarang
