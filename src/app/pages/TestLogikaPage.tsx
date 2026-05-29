@@ -542,8 +542,8 @@ export function TestLogikaPage() {
                 <span
                   key={step}
                   className={`h-1.5 rounded-full transition-all duration-300 ${profileStep === step
-                      ? "w-8 bg-gradient-to-r from-indigo-500 to-purple-500"
-                      : "w-2 bg-slate-200"
+                    ? "w-8 bg-gradient-to-r from-indigo-500 to-purple-500"
+                    : "w-2 bg-slate-200"
                     }`}
                 />
               ))}
@@ -600,8 +600,8 @@ export function TestLogikaPage() {
                         key={item.id}
                         onClick={() => setSelectedLevel(item.id)}
                         className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition active:scale-[0.98] ${active
-                            ? "bg-indigo-50 ring-2 ring-indigo-400/40"
-                            : "bg-white/60 hover:bg-white/90"
+                          ? "bg-indigo-50 ring-2 ring-indigo-400/40"
+                          : "bg-white/60 hover:bg-white/90"
                           }`}
                       >
                         <span className="text-2xl">{item.emoji}</span>
@@ -615,8 +615,8 @@ export function TestLogikaPage() {
                         </span>
                         <span
                           className={`flex h-5 w-5 items-center justify-center rounded-full border-2 transition ${active
-                              ? "border-indigo-500 bg-indigo-500"
-                              : "border-slate-200 bg-transparent"
+                            ? "border-indigo-500 bg-indigo-500"
+                            : "border-slate-200 bg-transparent"
                             }`}
                         >
                           {active && (
@@ -753,8 +753,8 @@ export function TestLogikaPage() {
               {showFeedback && (
                 <div
                   className={`mt-4 rounded-2xl border px-4 py-3 text-center text-sm font-black ${isCorrect
-                      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                      : "border-red-200 bg-red-50 text-red-600"
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                    : "border-red-200 bg-red-50 text-red-600"
                     }`}
                 >
                   {isCorrect
@@ -831,7 +831,7 @@ export function TestLogikaPage() {
             {/* Title & Progress details */}
             <div className="space-y-3">
               <h2 className="text-2xl font-black tracking-tight text-slate-900">
-                Menghitung Hasil Kuis
+                Menghitung Hasil Tes
               </h2>
               <p className="mx-auto max-w-[280px] text-xs font-black text-indigo-500 uppercase tracking-widest animate-pulse h-4">
                 {calcStatus}
@@ -1055,8 +1055,7 @@ export function TestLogikaPage() {
 
               <div id="generate-card-story" className="rounded-3xl bg-white/95 p-5 shadow-xl shadow-sky-100/60 sm:p-6 scroll-mt-6">
                 <h2 className="mb-4 flex items-center gap-2 font-black text-slate-950">
-                  <Share2 className="h-5 w-5 text-[#006EFF]" /> Generate Card
-                  Story
+                  <Share2 className="h-5 w-5 text-[#006EFF]" /> Share ke Social Media
                 </h2>
                 <p className="mb-4 text-sm leading-relaxed text-slate-500">
                   Tambahkan foto, geser posisinya, lalu download atau share
