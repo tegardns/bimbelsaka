@@ -165,7 +165,7 @@ export function TestLogikaPage() {
   const [questionError, setQuestionError] = useState("");
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<AnswerRecord[]>([]);
-  const [timeLeft, setTimeLeft] = useState(30);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [streak, setStreak] = useState(0);
@@ -187,7 +187,7 @@ export function TestLogikaPage() {
   useEffect(() => {
     if (stage !== "intro") return;
 
-    const text = `Halo ${playerName || "Pejuang"}! Kamu akan menghadapi 20 misi logika sebagai ${level.title} ${level.emoji}. Setiap misi punya waktu 30 detik. Baca soal dengan tenang, pilih jawaban terbaik, dan tunjukkan kemampuanmu!`;
+    const text = `Halo ${playerName || "Pejuang"}! Kamu akan menghadapi 20 misi logika sebagai ${level.title} ${level.emoji}. Setiap misi punya waktu 1 menit (60 detik). Baca soal dengan tenang, pilih jawaban terbaik, dan tunjukkan kemampuanmu!`;
     setTypedIntro("");
 
     let index = 0;
@@ -214,7 +214,7 @@ export function TestLogikaPage() {
       setTimeLeft((previous) => {
         if (previous <= 1) {
           handleAnswer(null);
-          return 30;
+          return 60;
         }
         return previous - 1;
       });
@@ -247,7 +247,7 @@ export function TestLogikaPage() {
     setShowFeedback(false);
     setStreak(0);
     setMaxStreak(0);
-    setTimeLeft(30);
+    setTimeLeft(60);
     setResult(null);
     setAnalysisLoading(false);
   }
@@ -260,7 +260,7 @@ export function TestLogikaPage() {
   function handleAnswer(index: number | null) {
     if (showFeedback || !currentQ) return;
 
-    const timeSpent = 30 - timeLeft;
+    const timeSpent = 60 - timeLeft;
     const correct = index === currentQ.correctAnswer;
     const answerRecord: AnswerRecord = {
       questionId: currentQ.id,
@@ -294,7 +294,7 @@ export function TestLogikaPage() {
         setCurrentQuestion((previous) => previous + 1);
         setSelectedAnswer(null);
         setShowFeedback(false);
-        setTimeLeft(30);
+        setTimeLeft(60);
       } else {
         finishQuiz(nextAnswers);
       }
@@ -491,7 +491,7 @@ export function TestLogikaPage() {
               </span>
               <span className="h-4 w-px bg-slate-200" />
               <span className="flex items-center gap-1.5 font-semibold">
-                <span className="text-lg">⏱️</span> 30 Detik
+                <span className="text-lg">⏱️</span> 1 Menit
               </span>
               <span className="h-4 w-px bg-slate-200" />
               <span className="flex items-center gap-1.5 font-semibold">
