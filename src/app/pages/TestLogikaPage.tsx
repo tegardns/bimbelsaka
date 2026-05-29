@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -154,6 +154,8 @@ function renderFormattedText(text: string) {
 
 export function TestLogikaPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFromAi = searchParams.get("from") === "ai";
   const [stage, setStage] = useState<Stage>("landing");
   const [profileStep, setProfileStep] = useState(1);
   const [playerName, setPlayerName] = useState("");
@@ -452,14 +454,16 @@ export function TestLogikaPage() {
             .landing-bounce { animation: landingBounce 3s ease-in-out infinite; }
           `}</style>
 
-          <button
-            onClick={() => navigate("/")}
-            className="absolute left-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-2xl text-slate-500 transition active:scale-95"
-            aria-label="Kembali ke beranda"
-            title="Kembali"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
+          {!isFromAi && (
+            <button
+              onClick={() => navigate("/")}
+              className="absolute left-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-2xl text-slate-500 transition active:scale-95"
+              aria-label="Kembali ke beranda"
+              title="Kembali"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
 
           <div className="relative z-10 w-full max-w-sm space-y-7 text-center">
             {/* Icon */}

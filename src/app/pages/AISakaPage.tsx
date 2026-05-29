@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRegisterSW } from "virtual:pwa-register/react";
 import {
   ArrowLeft,
   Trash2,
@@ -8,6 +9,7 @@ import {
   X,
   Sparkles,
   Plus,
+  Brain,
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
@@ -55,6 +57,10 @@ const LoadingDots = () => (
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export function AISakaPage() {
   const navigate = useNavigate();
+  const {
+    needRefresh: [needRefresh],
+    updateServiceWorker,
+  } = useRegisterSW();
   const [subject, setSubject] = useState<Subject>("Matematika");
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -251,6 +257,8 @@ export function AISakaPage() {
     setInput("");
   };
 
+  const showLogicTestButton = messages.length === 0 && input.trim() === "" && !image;
+
   return (
     <div
       className="fixed inset-0 flex flex-col overflow-hidden"
@@ -324,6 +332,29 @@ export function AISakaPage() {
           <Trash2 className="w-4.5 h-4.5" />
         </button>
       </header>
+
+      {/* ── PWA Update Notification Banner ── */}
+      {needRefresh && (
+        <div className="relative z-20 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 border-b border-blue-400/20 backdrop-blur-md flex items-center justify-between gap-3 animate-in slide-in-from-top duration-300">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center flex-shrink-0">
+              <Sparkles className="w-4 h-4 text-blue-400 animate-pulse" />
+            </div>
+            <div className="text-left">
+              <p className="text-white/90 text-xs font-black">Versi Baru Tersedia! 🚀</p>
+              <p className="text-white/40 text-[10px] font-medium leading-tight mt-0.5">
+                Kuis logika & Saka AI terbaru siap dipasang.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => updateServiceWorker(true)}
+            className="px-3.5 py-1.5 bg-white text-blue-600 rounded-xl text-xs font-black shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          >
+            Perbarui
+          </button>
+        </div>
+      )}
 
       {/* ── PWA Notification Banner (Muncul di atas jika belum install) ── */}
       {showPwaBanner && (
@@ -634,6 +665,20 @@ export function AISakaPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ── Floating "Tes Logika" Button ── */}
+      {showLogicTestButton && (
+        <button
+          onClick={() => {
+            trackEvent("ai_saka_go_to_logic_test", "ai_saka", "click");
+            navigate("/tes-logika?from=ai");
+          }}
+          className="fixed bottom-[135px] md:bottom-[150px] right-4 md:right-8 z-30 flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-2.5 text-xs font-black text-white shadow-lg shadow-blue-500/20 hover:scale-105 active:scale-[0.97] transition-all duration-200 cursor-pointer border border-blue-400/20"
+        >
+          <Brain className="w-4 h-4 text-blue-200" />
+          <span>Tes Logika</span>
+        </button>
       )}
     </div>
   );
