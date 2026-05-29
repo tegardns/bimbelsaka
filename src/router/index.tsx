@@ -17,6 +17,7 @@ import { CareerPage } from "../app/pages/CareerPage";
 import { ArticlesPage } from "../app/pages/ArticlesPage";
 import { ArticleDetailPage } from "../app/pages/ArticleDetailPage";
 import { AISakaPage } from "../app/pages/AISakaPage";
+import { TestLogikaPage } from "../app/pages/TestLogikaPage";
 
 import { LoginAdmin } from "../app/pages/admin/LoginAdmin";
 import { CandidatesPage } from "../app/pages/admin/CandidatesPage";
@@ -65,6 +66,7 @@ export function AppRouter() {
         </Route>
 
         <Route path="/tanya-pr" element={<AISakaPage />} />
+        <Route path="/tes-logika" element={<TestLogikaPage />} />
 
         <Route path="/loginadmin" element={<LoginAdmin />} />
 

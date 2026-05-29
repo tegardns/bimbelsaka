@@ -123,6 +123,16 @@ export function Header() {
               Artikel
             </Link>
             <Link
+              to="/tes-logika"
+              className={`text-sm font-medium transition-colors ${
+                isActive("/tes-logika")
+                  ? "!text-white"
+                  : "!text-white/80 hover:!text-white"
+              }`}
+            >
+              Tes Logika
+            </Link>
+            <Link
               to="/daftar"
               className="ml-2 px-6 py-2.5 bg-accent !text-white rounded-xl font-medium hover:bg-accent/90 transition-all hover:shadow-lg hover:shadow-accent/30 hover:scale-105"
             >
@@ -207,6 +217,17 @@ export function Header() {
                   }`}
                 >
                   Artikel
+                </Link>
+                <Link
+                  to="/tes-logika"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`text-left py-2 transition-colors ${
+                    isActive("/tes-logika")
+                      ? "!text-white"
+                      : "!text-white/90 hover:!text-white"
+                  }`}
+                >
+                  Tes Logika
                 </Link>
                 <Link
                   to="/daftar"
