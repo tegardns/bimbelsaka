@@ -33,3 +33,82 @@ textarea,
 select {
   font: inherit;
 }
+
+/* Custom table styling in chat messages */
+.prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1rem 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.775rem;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.prose th {
+  background: rgba(59, 130, 246, 0.15);
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 600;
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.25);
+}
+
+.prose td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.prose tr:last-child td {
+  border-bottom: none;
+}
+
+.prose tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.prose tr:hover {
+  background: rgba(59, 130, 246, 0.04);
+}
+
+/* Wrap table for responsive scroll */
+.prose {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+/* Premium formula copy interaction */
+.katex-display {
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid transparent;
+}
+
+.katex-display:hover {
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+}
+
+.katex-display::after {
+  content: "Klik untuk salin rumus 📋";
+  position: absolute;
+  bottom: 2px;
+  right: 12px;
+  font-size: 8px;
+  font-family: Inter, sans-serif;
+  color: rgba(59, 130, 246, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.katex-display:hover::after {
+  opacity: 1;
+}
