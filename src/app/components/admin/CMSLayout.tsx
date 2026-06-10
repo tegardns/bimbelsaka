@@ -9,6 +9,7 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  Link2,
 } from "lucide-react";
 import { useState } from "react";
 import { ConfirmDialog } from "../ConfirmDialog";
@@ -44,6 +45,7 @@ export function CMSLayout() {
     { path: "/cms/candidates", icon: UserPlus, label: "Data Candidate" },
     { path: "/cms/students", icon: Users, label: "Data Pendaftar" },
     { path: "/cms/articles", icon: FileText, label: "Data Artikel" },
+    { path: "/cms/links", icon: Link2, label: "Kelola Links" },
     { path: "/cms/settings", icon: Settings, label: "Edit Admin" },
   ];
 

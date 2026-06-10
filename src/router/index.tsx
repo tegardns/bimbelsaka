@@ -18,31 +18,31 @@ import { ArticlesPage } from "../app/pages/ArticlesPage";
 import { ArticleDetailPage } from "../app/pages/ArticleDetailPage";
 import { AISakaPage } from "../app/pages/AISakaPage";
 import { TestLogikaPage } from "../app/pages/TestLogikaPage";
+import { HargaPage } from "../app/pages/HargaPage";
+import { LinksPage } from "../app/pages/LinksPage";
 
 import { LoginAdmin } from "../app/pages/admin/LoginAdmin";
 import { CandidatesPage } from "../app/pages/admin/CandidatesPage";
 import { StudentsPage } from "../app/pages/admin/StudentsPage";
 import { AdminArticlesPage } from "../app/pages/admin/AdminArticlesPage";
 import { SettingsPage } from "../app/pages/admin/SettingsPage";
+import { AdminLinksPage } from "../app/pages/admin/AdminLinksPage";
 
 import { CMSLayout } from "../app/components/admin/CMSLayout";
 import { ProtectedRoute } from "../app/components/ProtectedRoute";
 
 function ScrollToTop() {
-  // 1. Tambahkan 'hash' di sini
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    // 2. Bungkus dengan kondisi: Jika tidak ada hash, baru scroll ke atas
     if (!hash) {
       window.scrollTo(0, 0);
     }
-  }, [pathname, hash]); // 3. Tambahkan 'hash' ke dalam dependency array di sini
+  }, [pathname, hash]);
 
   return null;
 }
 
-// ← PERBAIKAN BUG: PageTracker dipindah ke dalam komponen
 function PageTracker() {
   const location = useLocation();
   useEffect(() => {
@@ -63,8 +63,10 @@ export function AppRouter() {
           <Route path="/karir" element={<CareerPage />} />
           <Route path="/artikel" element={<ArticlesPage />} />
           <Route path="/artikel/:id" element={<ArticleDetailPage />} />
+          <Route path="/harga" element={<HargaPage />} />
         </Route>
 
+        <Route path="/links" element={<LinksPage />} />
         <Route path="/tanya-pr" element={<AISakaPage />} />
         <Route path="/tes-logika" element={<TestLogikaPage />} />
 
@@ -83,6 +85,7 @@ export function AppRouter() {
           <Route path="students" element={<StudentsPage />} />
           <Route path="articles" element={<AdminArticlesPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="links" element={<AdminLinksPage />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
